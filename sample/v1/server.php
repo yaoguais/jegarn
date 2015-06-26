@@ -324,7 +324,44 @@ Server::$app->on('receive', function ($serv, $fd, $from_id, $data) {
 });
 
 Server::$app->start();
+/**
+连接到来：
+这个时候还不知道是哪个用户，但是知道其IP地址，可以根据IP地址做限制。
+应用场景：IpFilter
+ *
+消息到来：第一次
+生成唯一的connectKey,connectKey映射user
+connectKey = appGUid+fd
+appGUid = ip+port
+connectKey = ip+port+fd
+可以使用redis等key-value内存数据库实现
+
+发送消息：
+ 接收方如果是离线用户：
+    缓存到消息队列（每个gUid一个队列）
+ 接收方如果是在线用户：
+    如果是本服务器的用户：(1)
+          如果是本进程管理的用户：直接转发
+          不是本进程管理的用户：通过管道转发到指定进程，该进程再处理
+    如果不是本服务器的用户：
+          通过socket转发到该服务器,然后进行(1)
 
 
 
+ 添加用户：
+ 1.本进程生成fdGUidMap
+ 2.内存数据库生成connectKeyUserMap
+ 查找用户：
+ 1.本进程是否记录该用户
+ 2.内存数据库是否记录该用户
+ 删除用户：
+ 1.本进行删除该用户
+ 2.内存数据库删除该用户
+ *
+ 用户数据：gUid
+ 1个用户4b数据pack成二进制，1百万用户4MB数据
+ 用户昵称、备注等信息通过restful
 
+ 消息类别：一对一
+         一对多
+*/
