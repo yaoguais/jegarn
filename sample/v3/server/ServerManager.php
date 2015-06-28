@@ -11,13 +11,13 @@ namespace minions\server;
 final class ServerManager{
     private static $_instance;
     private function __construct(){}
-    public function getInstance(){
+    public static function getInstance(){
         return self::$_instance = self::$_instance ? : new self;
     }
-    private $_servers;
+    private $_servers = [];
 
     public function addServer($key,$config){
-        $key = $key ? : ($config['key'] ? : count($this->_servers));
+        $key = $key ? : (isset($config['key']) ? $config['key'] : count($this->_servers));
         if(empty($config['class']) || isset($this->_servers[$key]) || !class_exists($config['class'])){
             return false;
         }
@@ -49,5 +49,13 @@ final class ServerManager{
             return false;
         }
         return true;
+    }
+
+    public function startServers(){
+        if(is_array($this->_servers)){
+            foreach($this->_servers as $server){
+                $server->start();
+            }
+        }
     }
 }

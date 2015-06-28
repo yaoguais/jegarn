@@ -11,7 +11,7 @@ namespace minions\cache;
 final class CacheManager{
     private static $_instance;
     private function __construct(){}
-    public function getInstance(){
+    public static function getInstance(){
         return self::$_instance = self::$_instance ? : new self;
     }
 
