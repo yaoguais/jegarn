@@ -1,6 +1,6 @@
 <?php
 
-namespace minions;
+namespace jegern\cache;
 
 class RedisCache implements ICache{
 
