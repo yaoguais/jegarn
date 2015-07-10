@@ -8,6 +8,27 @@ interface ICache {
     const SUCCESS = 1;
 
     /**
+     * 初始化的回调
+     * @param $config
+     * @return mixed
+     */
+    //public function init($config);
+
+    /**
+     * 改变数据库时触发
+     * @param $dbName
+     * @return mixed
+     */
+    public function useDb($dbName);
+
+    /**
+     * 改变表或集合等时触发
+     * @param $tableName
+     * @return mixed
+     */
+    public function useTable($tableName);
+
+    /**
      * 自增并获取自增后的值
      * @param $key
      * @param int $step
@@ -22,6 +43,20 @@ interface ICache {
      * @return int 减少后的值
      */
     public function decrease($key,$step=1);
+
+    /**
+     * @param $key
+     * @param $value
+     * @return int status
+     */
+    public function set($key,$value);
+
+    /**
+     * @param $ley
+     * @param $value
+     * @return int status
+     */
+    public function get($ley,&$value);
 
     /**
      * 设置Map

@@ -10,9 +10,15 @@ final class PackManager{
         self::MSG_PACK => 'fatty\\MsgPack',
         self::PHP_PACK => 'fatty\\PhpPack'
     ];
+
+    private static $_packObjects;
+
     public static function getPack($id){
         if(isset(self::$objMap[$id])){
-            return new self::$objMap[$id]();
+            if(isset(self::$_packObjects[$id])){
+                return self::$_packObjects[$id];
+            }
+            return self::$_packObjects[$id] = new self::$objMap[$id]();
         }
         return null;
     }
