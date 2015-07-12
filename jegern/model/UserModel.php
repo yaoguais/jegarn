@@ -2,7 +2,6 @@
 
 namespace jegern\model;
 use jegern\cache\CacheManager;
-use jegern\cache\ICache;
 
 class UserModel extends ModelBase{
 
@@ -15,14 +14,19 @@ class UserModel extends ModelBase{
     }
 
     public function createUser($model){
-        $db = $this->getConnection();
         $uid = ConfigurationModel::model()->getNextUid();
-        return $db->setMap($uid,[
+        $db = $this->getConnection();
+        $model = [
             'username' => $model['username'],
             'password' => $this->getEncryptPassword($model['password']),
             'nickname' => $model['nickname'],
             'create_time' => time()
-        ]);
+        ];
+        if($db->setMap($uid,$model)){
+            $model['uid'] = $uid;
+            return $model;
+        }
+        return null;
     }
 
     public function getEncryptPassword($password){

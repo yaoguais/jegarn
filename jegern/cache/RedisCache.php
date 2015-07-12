@@ -89,7 +89,7 @@ class RedisCache implements ICache{
         if(!$this->open()){
             return false;
         }
-        return $this->cache->hMset($key,$map);
+        return $this->cache->hMSet($key,$map);
     }
 
     public function getMap($key, $fields=null) {
@@ -99,7 +99,7 @@ class RedisCache implements ICache{
         if(empty($fields)){
             return $this->cache->hGetAll($key);
         }
-        return $this->cache->hMget($key,$fields);
+        return $this->cache->hMGet($key,$fields);
     }
 
     public function deleteMap($key){
