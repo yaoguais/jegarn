@@ -17,7 +17,7 @@ class UserModel extends ModelBase{
     public function createUser($model){
         $db = $this->getConnection();
         $uid = ConfigurationModel::model()->getNextUid();
-        return ICache::SUCCESS === $db->setMap($uid,[
+        return $db->setMap($uid,[
             'username' => $model['username'],
             'password' => $this->getEncryptPassword($model['password']),
             'nickname' => $model['nickname'],
@@ -30,15 +30,20 @@ class UserModel extends ModelBase{
     }
 
     public function deleteUser($model){
-
+        $db = $this->getConnection();
+        return $db->deleteMap($model['uid']);
     }
 
     public function updateUser($model){
-
+        $db = $this->getConnection();
+        $uid = $model['uid'];
+        unset($model['uid']);
+        return $db->setMap($uid,$model);
     }
 
     public function getUser($model){
-
+        $db = $this->getConnection();
+        return $db->getMap($model['uid']);
     }
 
 }
