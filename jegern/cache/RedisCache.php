@@ -49,6 +49,17 @@ class RedisCache implements ICache{
         return $this->cache->decrBy($key,$step);
     }
 
+    public function append($key,$value){
+        if(!$this->open()){
+            return false;
+        }
+        return $this->cache->append($key,$value);
+    }
+
+    public function prepend($key,$value){
+        return false;
+    }
+
     public function useDb($dbName) {
         if(!$this->open()){
             return false;
@@ -71,11 +82,14 @@ class RedisCache implements ICache{
         return $this->cache->set($key,$value);
     }
 
-    public function get($key) {
+    public function get($key,$del=false) {
         if(!$this->open()){
             return false;
         }
-        return $this->cache->get($key);
+        if(false === $del){
+            return $this->cache->get($key);
+        }
+        return $this->cache->getSet($key,'');
     }
 
     public function delete($key){

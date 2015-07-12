@@ -10,8 +10,10 @@ interface ICache {
     public function useTable($tableName);
     public function increase($key,$step=1);
     public function decrease($key,$step=1);
+    public function append($key,$value);
+    public function prepend($key,$value);
     public function set($key,$value);
-    public function get($key);
+    public function get($key,$del=false);
     public function delete($key);
     public function setMap($key,$map);
     public function getMap($key,$fields=null);

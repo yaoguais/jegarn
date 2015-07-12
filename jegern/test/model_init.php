@@ -11,3 +11,4 @@ $redis->init([
 
 jegern\cache\CacheManager::addCache('user',$redis);
 jegern\cache\CacheManager::addCache('configuration',$redis);
+jegern\cache\CacheManager::addCache('user_connection',$redis);

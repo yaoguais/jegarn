@@ -3,35 +3,33 @@
 namespace jegern\pack;
 
 final class PackManager{
-    const ERROR_PACK = ' ';
-    const PHP_PACK = '0';
-    const MSG_PACK = '1';
-    protected static $objMap = [
-        self::MSG_PACK => 'fatty\\MsgPack',
-        self::PHP_PACK => 'fatty\\PhpPack'
-    ];
 
     private static $_packObjects;
 
-    public static function getPack($id){
-        if(isset(self::$objMap[$id])){
-            if(isset(self::$_packObjects[$id])){
-                return self::$_packObjects[$id];
-            }
-            return self::$_packObjects[$id] = new self::$objMap[$id]();
+    public static function addPack($id,&$pack){
+        if(!isset(self::$_packObjects[$id])){
+            self::$_packObjects[$id] = $pack;
+            return true;
+        }
+        return false;
+    }
+
+    public static function getPack($id,$class=null){
+        if(isset(self::$_packObjects[$id])){
+            return self::$_packObjects[$id];
+        }
+        if($class != null && class_exists($class)){
+            $pack = new $class();
+            return self::addPack($id,$pack) ? $pack : null;
         }
         return null;
     }
-    public static function getId($pack){
-        $packClass = get_class($pack);
-        foreach(self::$objMap as $id=>$class){
-            if($class == $packClass){
-                return $id;
-            }
+
+    public static function removePack($id){
+        if(isset(self::$_packObjects[$id])){
+            unset(self::$_packObjects[$id]);
+            return true;
         }
-        return self::ERROR_PACK;
-    }
-    public static function hasId($id){
-        return isset(self::$objMap[$id]);
+        return false;
     }
 }

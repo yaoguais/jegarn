@@ -7,19 +7,17 @@ class ConfigurationModel extends ModelBase {
 
     public static $singleInstance = true;
 
-    public static function getConnection(){
+    public function getConnection(){
         $db = CacheManager::getCache('configuration');
         $db->useDb(15);
         return $db;
     }
 
     public function getNextUid(){
-        $db = $this->getConnection();
-        return $db->increase('uid');
+        return $this->getConnection()->increase('uid');
     }
 
     public function getNextGid(){
-        $db = $this->getConnection();
-        return $db->increase('gid');
+        return $this->getConnection()->increase('gid');
     }
 }

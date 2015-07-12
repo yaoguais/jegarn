@@ -7,7 +7,7 @@ class UserModel extends ModelBase{
 
     public static $singleInstance = true;
 
-    public static function getConnection(){
+    public function getConnection(){
         $db = CacheManager::getCache('user');
         $db->useDb(1);
         return $db;
@@ -15,14 +15,13 @@ class UserModel extends ModelBase{
 
     public function createUser($model){
         $uid = ConfigurationModel::model()->getNextUid();
-        $db = $this->getConnection();
         $model = [
             'username' => $model['username'],
             'password' => $this->getEncryptPassword($model['password']),
             'nickname' => $model['nickname'],
             'create_time' => time()
         ];
-        if($db->setMap($uid,$model)){
+        if($this->getConnection()->setMap($uid,$model)){
             $model['uid'] = $uid;
             return $model;
         }
@@ -34,20 +33,25 @@ class UserModel extends ModelBase{
     }
 
     public function deleteUser($model){
-        $db = $this->getConnection();
-        return $db->deleteMap($model['uid']);
+        return $this->getConnection()->deleteMap($model['uid']);
     }
 
     public function updateUser($model){
-        $db = $this->getConnection();
         $uid = $model['uid'];
         unset($model['uid']);
-        return $db->setMap($uid,$model);
+        return $this->getConnection()->setMap($uid,$model);
     }
 
     public function getUser($model){
-        $db = $this->getConnection();
-        return $db->getMap($model['uid']);
+        return $this->getConnection()->getMap($model['uid']);
+    }
+
+    public static function pack($uid){
+        return pack('N',$uid);
+    }
+
+    public static function unpack($uidPacked){
+        return unpack('N',$uidPacked);
     }
 
 }

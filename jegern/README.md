@@ -5,7 +5,7 @@
 数据库2：用户连接表：key:uid value:conn_id(ip_port_pid_tid_fd)
 数据库3: 组成员表 : key:gid value:set of uid
 数据库4: 用户关系表: key:uid+'_'+target_uid(uid<target_uid) value:relation(1:friend 2:black)
-数据库5: 离线消息表: key:uid value:list of message
+数据库5: 离线消息表: key:uid value:list of message//string glue
 数据库6：消息记录表：key:module_type_id value:list of message(存到mysql数据库中要快点 list的分页太慢)
 
 

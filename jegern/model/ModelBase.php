@@ -6,12 +6,10 @@ abstract class ModelBase {
 
     public static $singleInstance = null;
 
-    public static function getConnection(){
-
-    }
+    abstract public function getConnection();
 
     public static function model(){
-        if(isset(static::$singleInstance)){
+        if(isset(static::$singleInstance) && static::$singleInstance){
             if(is_object(static::$singleInstance)){
                 return static::$singleInstance;
             }else{
