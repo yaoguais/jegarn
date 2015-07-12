@@ -6,6 +6,7 @@ class RedisCache implements ICache{
 
     protected $cache;
     protected $config;
+    protected $dbName;
 
     public function init($config) {
         $this->config = $config;
@@ -30,7 +31,7 @@ class RedisCache implements ICache{
         if($this->cache){
             $this->cache->close();
             unset($this->cache);
-            $this->cache = null;
+            $this->cache = $this->config = $this->dbName = null;
         }
     }
 
@@ -52,7 +53,11 @@ class RedisCache implements ICache{
         if(!$this->open()){
             return false;
         }
-        return $this->cache->select($dbName);
+        if($this->dbName != $dbName){
+            $this->dbName = $dbName;
+            return $this->cache->select($dbName);
+        }
+        return true;
     }
 
     public function useTable($tableName) {
@@ -84,7 +89,7 @@ class RedisCache implements ICache{
         if(!$this->open()){
             return false;
         }
-        $this->cache->hMset($key,$map);
+        return $this->cache->hMset($key,$map);
     }
 
     public function getMap($key, $fields=null) {
@@ -98,10 +103,7 @@ class RedisCache implements ICache{
     }
 
     public function deleteMap($key){
-        if(!$this->open()){
-            return false;
-        }
-        return $this->cache->hDel($key);
+        return $this->delete($key);
     }
 
     public function addToSet($key, $value) {
@@ -120,6 +122,13 @@ class RedisCache implements ICache{
 
     public function deleteSet($key){
         return $this->delete($key);
+    }
+
+    public function getSet($key){
+        if(!$this->open()){
+            return null;
+        }
+        return $this->cache->sMembers($key);
     }
 
     public function getSetSize($key){

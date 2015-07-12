@@ -19,6 +19,7 @@ interface ICache {
     public function addToSet($key,$value);
     public function removeFromSet($key,$value);
     public function deleteSet($key);
+    public function getSet($key);
     public function getSetSize($key);
     public function pushToList($key,$value);
     public function popFromList($key);
