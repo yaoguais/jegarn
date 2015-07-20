@@ -2,11 +2,11 @@
 
 namespace jegern\pack;
 
-class PhpPack implements IPack{
-    public function pack(&$data){
+abstract class PhpPack{
+    public static function pack(&$data){
         return serialize($data);
     }
-    public function unpack(&$data){
+    public static function unpack(&$data){
         return unserialize($data);
     }
 }

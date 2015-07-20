@@ -2,15 +2,17 @@
 
 namespace jegern\pack;
 
-class GluePack implements IPack{
+abstract class GluePack{
 
-    public function pack(&$data)
+    public static $glue = "\n";
+
+    public static function pack(&$data)
     {
-        return implode("\n",$data);
+        return implode(self::$glue,$data);
     }
 
-    public function unpack(&$data)
+    public static function unpack(&$data)
     {
-        return explode("\n",$data);
+        return explode(self::$glue,$data);
     }
 }

@@ -4,11 +4,9 @@ namespace jegern\model;
 
 abstract class ModelBase {
 
-    public static $singleInstance = null;
+    protected static $singleInstance = null;
 
-    public static function getConnection(){
-
-    }
+    abstract protected function getConnection();
 
     public static function model(){
         if(isset(static::$singleInstance)){

@@ -2,11 +2,11 @@
 
 namespace jegern\pack;
 
-class MsgPack implements IPack{
-    public function pack(&$data){
+abstract class MsgPack {
+    public static function pack(&$data){
         return msgpack_pack($data);
     }
-    public function unpack(&$data){
+    public static function unpack(&$data){
         return msgpack_unpack($data);
     }
 }

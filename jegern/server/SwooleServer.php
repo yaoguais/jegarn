@@ -1,6 +1,7 @@
 <?php
 
 namespace jegern\server;
+use jegern\message\Message;
 
 class SwooleServer{
 
@@ -37,7 +38,7 @@ class SwooleServer{
                 $message = $this->fdBufferMap[$fd]->get();
                 $this->fdBufferMap[$fd]->clear();
             }
-            echo $message,"\n";
+            Message::dispatcherMessage($server,$fd,$from_id,$message);
         }
     }
 
