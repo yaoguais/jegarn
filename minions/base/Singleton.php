@@ -3,7 +3,7 @@
 namespace minions\base;
 use \Exception;
 
-class Singleton {
+class Singleton extends Component{
 
     private static $instance;
 
@@ -12,7 +12,10 @@ class Singleton {
     }
 
     /**
+     * @param null $class
+     *
      * @return static
+     * @throws Exception
      */
     public static function getInstance($class = null){
 

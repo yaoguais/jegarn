@@ -2,17 +2,26 @@
 
 namespace minions\manager;
 use minions\base\Code;
-use \minions\base\Singleton;
 use \minions\model\User;
 use \PDO;
 
-class UserManager extends Singleton {
+class UserManager extends BaseManager {
 
 	const ADD_USER = 'INSERT INTO `m_user`(`username`,`password`,`create_time`,`nick`) VALUES(?,?,?,?);';
 	const GET_USER_BY_UID = 'SELECT uid,username,password FROM `m_user` WHERE `uid` = ?;';
 	const GET_USER_BY_USERNAME = 'SELECT uid,username,password FROM `m_user` WHERE `usename` = ?;';
 	const REMOVE_USER_BY_UID = 'DELETE FROM `m_user` WHERE uid = ?';
 	const REMOVE_USER_BY_USERNAME = 'DELETE FROM `m_user` WHERE username = ?';
+
+    protected $events = ['test'=>true];
+
+    /**
+     * @param $arg
+     */
+    protected function test($arg){
+
+        echo "test called $arg\n";
+    }
 
 	public static function getInstance($class = __CLASS__){
 

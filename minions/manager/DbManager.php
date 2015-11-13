@@ -1,16 +1,18 @@
 <?php
 
 namespace minions\manager;
-use \minions\base\Singleton;
 use \Exception;
 
-class DbManager extends Singleton {
+class DbManager extends BaseManager {
 
     /* @var \PDO */
     protected $_pdo;
 
     /**
-     * @return \PDO
+     * @param null|string $class
+     *
+     * @return static
+     * @throws Exception
      */
     public static function getInstance($class = __CLASS__){
 
