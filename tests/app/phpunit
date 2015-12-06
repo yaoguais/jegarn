@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/bin/phpunit --bootstrap /home/yaoguai/workspace/github/minions/tests/app/bootstrap.php /home/yaoguai/workspace/github/minions/tests/app
