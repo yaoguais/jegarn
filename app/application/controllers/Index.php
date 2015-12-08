@@ -9,6 +9,6 @@ class IndexController extends ApiControllerBase {
     public function indexAction(){
 
         // forward to admin module to login
-        return ApiResponse::newInstance(Code::FAIL_ACTION_NOT_REACHABLE);
+        return ApiResponse::newInstance(Code::FAIL_ACTION_NOT_REACHABLE, null);
     }
 }

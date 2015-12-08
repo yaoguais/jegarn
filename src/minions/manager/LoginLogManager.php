@@ -26,11 +26,7 @@ class LoginLogManager extends BaseManager {
         }
         $dbManager = DbManager::getInstance();
         $statement = $dbManager->prepare(self::ADD_LOGIN_LOG);
-        $statement->bindValue(1, $model->uid, PDO::PARAM_INT);
-        $statement->bindValue(2, $model->createTime, PDO::PARAM_INT);
-        $statement->bindValue(3, $model->ip, PDO::PARAM_STR);
-        $statement->bindValue(4, $model->status, PDO::PARAM_INT);
-        if(!$statement->execute()){
+        if(!$statement->execute([$model->uid, $model->createTime, $model->ip, $model->status])){
             return ApiResponse::newInstance(Code::FAIL_DATABASE_ERROR,'add login log failed');
         }
 
@@ -41,10 +37,7 @@ class LoginLogManager extends BaseManager {
 
         $dbManager = DbManager::getInstance();
         $statement = $dbManager->prepare(self::COUNT_BY_STATUS);
-        $statement->bindValue(1, $uid, PDO::PARAM_INT);
-        $statement->bindValue(2, $createTime, PDO::PARAM_INT);
-        $statement->bindValue(3, $status, PDO::PARAM_STR);
 
-        return false !== $statement->execute() ? $statement->fetchColumn() : false;
+        return false !== $statement->execute([$uid, $createTime, $status]) ? $statement->fetchColumn() : false;
     }
 }

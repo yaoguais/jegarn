@@ -49,17 +49,12 @@ class UserManager extends BaseManager {
 			return $resp;
 		}
 		$user->token = Text::generateGUID();
+        $user->createTime = time();
+        $user->regIp = ApiRequest::getRemoteIp();
 		$password = $this->enCryptPassword($user->password);
 		$dbManager = DbManager::getInstance();
 		$statement = $dbManager->prepare(self::ADD_USER);
-		$statement->bindValue(1,$user->username, PDO::PARAM_STR);
-		$statement->bindValue(2,$password, PDO::PARAM_STR);
-		$statement->bindValue(3,time(),PDO::PARAM_INT);
-		$statement->bindValue(4,$user->nick,PDO::PARAM_STR);
-		$statement->bindValue(5,$user->avatar, PDO::PARAM_STR);
-		$statement->bindValue(6,$user->token, PDO::PARAM_STR);
-		$statement->bindValue(7, ApiRequest::getRemoteIp(), PDO::PARAM_STR);
-		if(!$statement->execute()){
+		if(!$statement->execute([$user->username, $password, $user->createTime, $user->nick, $user->avatar, $user->token,$user->regIp])){
 			return ApiResponse::newInstance(Code::FAIL_USER_NAME_ALREADY_EXISTS,null);
 		}
 		$user->id = $dbManager->lastInsertId();
@@ -76,9 +71,7 @@ class UserManager extends BaseManager {
 		}
 		$dbManager = DbManager::getInstance();
 		$statement = $dbManager->prepare(self::USER_COUNT_BY_IP);
-		$statement->bindValue(1, $ip, PDO::PARAM_STR);
-		$statement->bindValue(2, time()-86400,PDO::PARAM_INT);
-		if(!$statement->execute() || false === ($number = $statement->fetchColumn())){
+		if(!$statement->execute([$ip, time() - 86400]) || false === ($number = $statement->fetchColumn())){
 			return ApiResponse::newInstance(Code::FAIL_DATABASE_ERROR, 'fetch create user count failed');
 		}
 		if($number > 100){
@@ -141,10 +134,7 @@ class UserManager extends BaseManager {
 		}
 		$dbManager = DbManager::getInstance();
 		$statement = $dbManager->prepare(self::UPDATE_USER_BY_ID);
-		$statement->bindValue(1, $user->avatar, PDO::PARAM_STR);
-		$statement->bindValue(2, $user->nick, PDO::PARAM_STR);
-		$statement->bindValue(3, $user->id, PDO::PARAM_INT);
-		if(!$statement->execute()){
+		if(!$statement->execute([$user->avatar, $user->nick, $user->id])){
 			return ApiResponse::newInstance(Code::FAIL_DATABASE_ERROR, null);
 		}
 
@@ -159,9 +149,7 @@ class UserManager extends BaseManager {
 		$user->token = Text::generateGUID();
 		$dbManager = DbManager::getInstance();
 		$statement = $dbManager->prepare(self::UPDATE_TOKEN_BY_ID);
-		$statement->bindValue(1, $user->token, PDO::PARAM_STR);
-		$statement->bindValue(2, $user->id, PDO::PARAM_INT);
-		if(!$statement->execute()){
+		if(!$statement->execute([$user->token, $user->id])){
 			return ApiResponse::newInstance(Code::FAIL_DATABASE_ERROR, 'update user token failed');
 		}
 

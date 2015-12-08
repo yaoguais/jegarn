@@ -27,13 +27,13 @@ class ApiPluginBase extends Plugin_Abstract {
     protected function checkAuth(Request_Abstract $request, Response_Abstract $response){
 
         $config = [
-            'white' => [
+            'allow' => [
                 'api-user-create' => 1,
                 'api-user-login'  => 1
             ]
         ];
         $id = strtolower($request->getModuleName().'-'.$request->getControllerName().'-'.$request->getActionName());
-        if(!isset($config['white'][$id])){
+        if(!isset($config['allow'][$id])){
             $user = new User();
             $user->id = ApiRequest::getParam('uid');
             $token = ApiRequest::getParam('token');
