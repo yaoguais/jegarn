@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="a open source chat system based on php. integrated authorization, chat, groupchat, chatroom, websocket and restful." />
+    <meta name="keywords" content="chat, groupchat, php, swoole, msgpack, open source, websocket, php socket" />
+    <meta name="author" content="yaoguai" />
+    <title>Jegarn —— A High Performance Chat System</title>
+    <link href="css/index.css" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div class="row">
+            <div class="nav-header"><a href="#"><img src="images/logo.png" alt="Jegarn.com" /> </a></div>
+            <div class="nav-details">
+                <ul class="nav-items">
+                    <li class="active"><a href="index.html">Home</a></li>
+                    <li><a href="https://github.com/Yaoguais/jegarn/wiki">Document</a></li>
+                    <li><a href="https://github.com/Yaoguais/jegarn/releases">Download</a></li>
+                    <li><a href="https://github.com/Yaoguais/jegarn">Github</a></li>
+                    <li><a href="https://jegarn.com/minions.html">Demo</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <header>
+        <div class="row">
+            <div class="content">
+                <h2>High Performance Chat System</h2>
+                <h4>Base on PHP & Swoole & Msgpack & Redis</h4>
+                <a class="started" href="https://jegarn.com/minions.html">
+                    <i>&nbsp;</i>Get Started !
+                </a>
+                <div class="description">
+                    Integrated authorization, chat, groupchat, chatroom and offline storage.
+                    Supported binary data, websocket, restful api and multi language SDKs such as Android IOS Javascript and so on.
+                    And it's easy to integrate your own applications via tcp protocol or restful api.
+                </div>
+            </div>
+        </div>
+    </header>
+    <footer>
+        <div class="row">
+            <div class="footer-link-left">
+                <ul class="list-inline">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li class="footer-menu-divider">⋅</li>
+                    <li>
+                        <a href="https://github.com/Yaoguais/jegarn/wiki">Document</a>
+                    </li>
+                    <li class="footer-menu-divider">⋅</li>
+                    <li>
+                        <a href="https://github.com/Yaoguais/jegarn/releases">Download</a>
+                    </li>
+                    <li class="footer-menu-divider">⋅</li>
+                    <li>
+                        <a href="https://jegarn.com/minions.html">Demo</a>
+                    </li>
+                </ul>
+                <p class="copyright text-muted small">Copyright &copy; Jegarn.com All Rights Reserved</p>
+            </div>
+            <div class="footer-link-right">
+                Jegarn[dʒeɡən]: a open source Chat system by PHP and easy to integrate your own applications. Powered by <a href="http://jegarn.com/">jegarn.com</a>
+            </div>
+        </div>
+    </footer>
+<script src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+    (function($){
+        window_load_adjust();
+        function window_load_adjust(){
+            var header_max_height = $(window).height() - $('nav').height();
+            if(header_max_height > 700){
+                $('header').height(header_max_height);
+                $('header .description').css('margin-top','80px');
+            }else{
+                $('header').height(700);
+                $('header .description').css('margin-top','0px');
+            }
+        }
+        $(window).resize(window_load_adjust);
+    })(jQuery);
+</script>
+</body>
+</html>

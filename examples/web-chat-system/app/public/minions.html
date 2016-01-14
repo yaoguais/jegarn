@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="a open source chat system based on php. integrated authorization, chat, groupchat, chatroom, websocket and restful." />
+    <meta name="keywords" content="chat, groupchat, php, swoole, msgpack, open source, websocket, php socket" />
+    <meta name="author" content="yaoguai" />
+    <title>TITLE</title>
+    <link href="css/font-awesome.css" rel="stylesheet">
+    <link href="css/context.standalone.css" rel="stylesheet">
+    <link href="css/jquery.alerts.css" rel="stylesheet">
+    <link href="css/chat.css" rel="stylesheet">
+</head>
+<body>
+<div id="chat"></div>
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/context.js"></script>
+<script src="js/jquery.alerts.js"></script>
+<script src="js/jegarn.js"></script>
+<script src="js/minions.js"></script>
+<script type="text/javascript">
+    (function(){
+        // init chat
+        minions.widget.chat.config = {host: '192.168.199.243', port: 9503, reconnect: 5};
+        // init base widget
+        minions.widget.initBase();
+        // demo
+        minions.demo.init();
+    })();
+</script>
+</body>
+</html>

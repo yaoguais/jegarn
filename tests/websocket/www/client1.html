@@ -1,0 +1,63 @@
+<script src="jegarn.js"></script>
+<script>
+    jegarn.debug = false;
+    var globalRecord = {
+        host : '192.168.199.243',
+        port : 9503,
+        account: 'tester',
+        password : '123456',
+        friend_id : 1002,
+        group_id : 2000,
+        chatroom_id: 2001
+    };
+    var clientInstance = new jegarn.client(globalRecord.host, globalRecord.port, 30 * 1000);
+    clientInstance.setUser(globalRecord.account,globalRecord.password);
+    clientInstance.setConnectListener(function (s) {
+        console.log('connect:', s);
+        // send chat message
+        var packet = new jegarn.packet.TextChat();
+        packet.to = globalRecord.friend_id;
+        packet.setText('how old are you? chat'+Math.random());
+        s.sendPacket(packet);
+        // send friend a groupchat message
+        packet = new jegarn.packet.TextGroupChat();
+        packet.to = globalRecord.friend_id;
+        packet.setGroupId(globalRecord.group_id);
+        packet.setText('how old are you? groupchat'+Math.random());
+        s.sendPacket(packet);
+        // send all group members a message
+        packet = new jegarn.packet.TextGroupChat();
+        packet.setSendToAll();
+        packet.setGroupId(globalRecord.group_id);
+        packet.setText('every body is ok? groupchat'+Math.random());
+        s.sendPacket(packet);
+        // send chatroom message
+        packet = new jegarn.packet.TextChatroom();
+        packet.setGroupId(globalRecord.chatroom_id);
+        packet.setText('what should we chat? chatroom'+Math.random());
+        s.sendPacket(packet);
+    });
+    clientInstance.setDisconnectListener(function (evt, s) {
+        console.log('disconnect:', evt, s);
+    });
+    clientInstance.setErrorListener(function (errorObject, s) {
+        console.log('error:', errorObject, s);
+    });
+    clientInstance.setPacketListener(function (packet, s) {
+        console.log('-----------------RECEIVE-------------------');
+        console.log('packet:', packet, s);
+        console.log('from: ', packet.from);
+        console.log('to: ', packet.to);
+        console.log('type: ', packet.type);
+        console.log('content: ', packet.content);
+    });
+    clientInstance.setSendListener(function (packet, s) {
+        console.log('-----------------SEND-------------------');
+        console.log('packet:', packet, s);
+        console.log('from: ', packet.from);
+        console.log('to: ', packet.to);
+        console.log('type: ', packet.type);
+        console.log('content: ', packet.content);
+    });
+    clientInstance.connect();
+</script>

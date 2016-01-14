@@ -1,0 +1,54 @@
+[common]
+application.directory                         = APPLICATION_PATH  "/application"
+application.ext                               = php
+application.view.ext                          = php
+application.modules 	                      = "Api"
+application.library 	                      = APPLICATION_PATH "/../src"
+application.library.directory 	              = APPLICATION_PATH "/../src"
+application.library.namespace 	              =
+application.bootstrap 	                      = APPLICATION_PATH "/application/Bootstrap.php"
+application.baseUri 	                      =
+application.dispatcher.defaultRoute           =
+application.dispatcher.throwException         = 1
+application.dispatcher.catchException         = 1
+application.dispatcher.defaultModule          = "Api"
+application.dispatcher.defaultController      = "index"
+application.dispatcher.defaultAction          = "index"
+
+[product : common]
+
+application.database.dns                      = "mysql:host=192.168.199.242;dbname=minions"
+application.database.username                 = "root"
+application.database.password                 = "123456"
+application.database.options                  =
+application.database.commands                 = "set names utf8"
+
+application.cache.host                        = '192.168.199.242'
+application.cache.port                        = 6379
+application.cache.timeout                     = 0.0
+application.cache.password                    =
+
+application.chat.localAddress                 = '192.168.199.243'
+application.chat.localPort                    = 80
+application.chat.remoteAddress                = '192.168.199.243'
+application.chat.remotePort                   = 9501
+application.chat.serverId                     = '1acee9d52668ca37f645411f39fce3c0'
+
+[develop : common]
+
+application.database.dns                      = "mysql:host=192.168.199.242;dbname=minions"
+application.database.username                 = "root"
+application.database.password                 = "123456"
+application.database.options                  =
+application.database.commands                 = "set names utf8"
+
+application.cache.host                        = '192.168.199.242'
+application.cache.port                        = 6379
+application.cache.timeout                     = 0.0
+application.cache.password                    =
+
+application.chat.localAddress                 = '192.168.199.243'
+application.chat.localPort                    = 80
+application.chat.remoteAddress                = '192.168.199.243'
+application.chat.remotePort                   = 9501
+application.chat.serverId                     = '1acee9d52668ca37f645411f39fce3c0'
