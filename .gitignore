@@ -1,3 +1,14 @@
 .idea/
-logs/
-upload/
+logs/*
+phpinfo.php
+nohup.out
+/tests/app/tmp/
+/tests/app/tmpunit
+/examples/web-chat-system/app/public/upload/
+/examples/web-chat-system/config/*
+!/examples/web-chat-system/app/public/upload/avatar/default/
+!/examples/web-chat-system/app/public/upload/group/default/
+!index.html
+!/examples/web-chat-system/app/application.ini.sample
+!/examples/web-chat-system/app/server.php.sample
+!/examples/web-chat-system/app/webserver.php.sample
