@@ -15,20 +15,136 @@
 </head>
 <body>
 <div id="chat"></div>
-<script src="js/jquery-1.11.3.min.js"></script>
-<script src="js/jquery-ui.min.js"></script>
-<script src="js/context.js"></script>
-<script src="js/jquery.alerts.js"></script>
-<script src="js/jegarn.js"></script>
-<script src="js/minions.js"></script>
-<script type="text/javascript">
+<style>
+    #loading{
+        width:100%;
+        height: 2000px;
+        background: #000000;
+        opacity: 0.8;
+    }
+    #loading svg{
+        width: 196px;
+        height: 196px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin: -98px 0 0 -98px;
+    }
+    #loading-process{
+        width: 196px;
+        height: 196px;
+        line-height: 196px;
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin: -98px 0 0 -98px;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 24px;
+    }
+</style>
+<div id="loading">
+    <svg width='196px' height='196px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="uil-balls"><rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect><g transform="rotate(0 50 50)">
+        <circle r="5" cx="30" cy="50">
+            <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite" dur="1s" values="0 0;19.999999999999996 -20" keyTimes="0;1"/>
+            <animate attributeName="fill" dur="1s" begin="0s" repeatCount="indefinite"  keyTimes="0;1" values="#fff;#999"/>
+        </circle>
+    </g><g transform="rotate(90 50 50)">
+        <circle r="5" cx="30" cy="50">
+            <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite" dur="1s" values="0 0;19.999999999999996 -20" keyTimes="0;1"/>
+            <animate attributeName="fill" dur="1s" begin="0s" repeatCount="indefinite"  keyTimes="0;1" values="#999;#000"/>
+        </circle>
+    </g><g transform="rotate(180 50 50)">
+        <circle r="5" cx="30" cy="50">
+            <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite" dur="1s" values="0 0;19.999999999999996 -20" keyTimes="0;1"/>
+            <animate attributeName="fill" dur="1s" begin="0s" repeatCount="indefinite"  keyTimes="0;1" values="#000;#fff"/>
+        </circle>
+    </g><g transform="rotate(270 50 50)">
+        <circle r="5" cx="30" cy="50">
+            <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite" dur="1s" values="0 0;19.999999999999996 -20" keyTimes="0;1"/>
+            <animate attributeName="fill" dur="1s" begin="0s" repeatCount="indefinite"  keyTimes="0;1" values="#fff;#999"/>
+        </circle>
+    </g></svg>
+    <div id="loading-process"></div>
+</div>
+<script>
     (function(){
-        // init chat
-        minions.widget.chat.config = {host: '192.168.199.243', port: 9503, reconnect: 5};
-        // init base widget
-        minions.widget.initBase();
-        // demo
-        minions.demo.init();
+        var loading = {
+            config : null,
+            index: 0,
+            load: function(){
+                var t = this.config[this.index]['type'];
+                var s = this.config[this.index]['src'];
+                if(t == 'js'){
+                    this.loadJs(s);
+                }else if(t == 'image'){
+                    this.loadImage(s);
+                }
+            },
+            loadJs: function(src){
+                var script = document.createElement('script');
+                script.src = src;
+                script.onload = function () {
+                    ++loading.index;
+                    loading.refresh();
+                };
+                document.head.appendChild(script);
+            },
+            loadImage: function(src){
+                var image = document.createElement('img');
+                image.src = src;
+                image.onload = function () {
+                    ++loading.index;
+                    loading.refresh();
+                };
+            },
+            refresh: function(){
+                var p = Math.ceil(this.index / this.config.length * 100);
+                if(this.index != this.config.length){
+                    document.getElementById("loading-process").innerHTML = p + '%';
+                    this.load();
+                }else{
+                    var elem = document.getElementById("loading");
+                    elem.parentNode.removeChild(elem);
+                    this.finish();
+                }
+            },
+            finish: function(){}
+        };
+        loading.config = [
+            {type: 'js', src: 'js/jquery-1.11.3.min.js'},
+            {type: 'js', src: 'js/jquery-ui.min.js'},
+            {type: 'js', src: 'js/context.js'},
+            {type: 'js', src: 'js/jquery.alerts.js'},
+            {type: 'js', src: 'js/jegarn.js'},
+            {type: 'js', src: 'js/minions.js'},
+            {type: 'image', 'src': 'images/logo.png'},
+            {type: 'image', 'src': 'images/book.png'},
+            {type: 'image', 'src': 'images/chat2.png'},
+            {type: 'image', 'src': 'images/radio.png'},
+            {type: 'image', 'src': 'images/stack.png'},
+            {type: 'image', 'src': 'images/stack2.png'},
+            {type: 'image', 'src': 'images/dock-login.png'},
+            {type: 'image', 'src': 'images/comments.png'},
+            {type: 'image', 'src': 'images/chat.png'},
+            {type: 'image', 'src': 'images/comments2.png'},
+            {type: 'image', 'src': 'images/open_arrow_fire.png'},
+            {type: 'image', 'src': 'images/book2.png'},
+            {type: 'image', 'src': 'images/open_arrow.png'},
+            {type: 'image', 'src': 'images/avatar.jpg'},
+            {type: 'image', 'src': 'images/chat-bg.jpg'},
+            {type: 'image', 'src': 'images/dock-recommend-user.png'}
+        ];
+        loading.finish = function(){
+            // init chat
+            minions.widget.chat.config = {host: '192.168.199.243', port: 9503, reconnect: 5};
+            // init base widget
+            minions.widget.initBase();
+            // demo
+            minions.demo.init();
+        };
+        loading.load();
     })();
 </script>
 </body>
