@@ -47,10 +47,64 @@
         }
         return fmt;
     };
+    minions.htmlspecialchars = function(string, quote_style, charset, double_encode){
+        //       discuss at: http://phpjs.org/functions/htmlspecialchars/
+        var optTemp = 0,
+            i = 0,
+            noquotes = false;
+        if (typeof quote_style === 'undefined' || quote_style === null) {
+            quote_style = 2;
+        }
+        string = string || '';
+        string = string.toString();
+        if (double_encode !== false) {
+            // Put this first to avoid double-encoding
+            string = string.replace(/&/g, '&amp;');
+        }
+        string = string.replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
+        var OPTS = {
+            'ENT_NOQUOTES'          : 0,
+            'ENT_HTML_QUOTE_SINGLE' : 1,
+            'ENT_HTML_QUOTE_DOUBLE' : 2,
+            'ENT_COMPAT'            : 2,
+            'ENT_QUOTES'            : 3,
+            'ENT_IGNORE'            : 4
+        };
+        if (quote_style === 0) {
+            noquotes = true;
+        }
+        if (typeof quote_style !== 'number') {
+            // Allow for a single string or an array of string flags
+            quote_style = [].concat(quote_style);
+            for (i = 0; i < quote_style.length; i++) {
+                // Resolve string input to bitwise e.g. 'ENT_IGNORE' becomes 4
+                if (OPTS[quote_style[i]] === 0) {
+                    noquotes = true;
+                } else if (OPTS[quote_style[i]]) {
+                    optTemp = optTemp | OPTS[quote_style[i]];
+                }
+            }
+            quote_style = optTemp;
+        }
+        if (quote_style & OPTS.ENT_HTML_QUOTE_SINGLE) {
+            string = string.replace(/'/g, '&#039;');
+        }
+        if (!noquotes) {
+            string = string.replace(/"/g, '&quot;');
+        }
+
+        return string;
+    };
     // manager
+    minions.user = {
+        OFFLINE: 0,
+        ONLINE: 1
+    };
     minions.userManager = {
         users: {
-            system: {uid: 'system', nick: 'system', motto: 'make jegarn better!', avatar: 'images/avatar.jpg'}
+            system: {uid: 'system', nick: 'system', motto: 'make jegarn better!', avatar: 'images/avatar.jpg', 'present' : minions.user.ONLINE}
         },
         addUser: function(user){
             this.users[user.uid] = user;
@@ -173,8 +227,8 @@
                 if(groups[i].group_id == groupId){
                     if(typeof this.userRosterGroup[uid][i]['rosters'] == "undefined"){
                         this.userRosterGroup[uid][i]['rosters'] = [];
-                        this.userRosterGroup[uid][i]['rosters'].push(roster);
                     }
+                    this.userRosterGroup[uid][i]['rosters'].push(roster);
                     break;
                 }
             }
@@ -322,6 +376,11 @@
                 $(document).on('mouseenter', '.draggable header', function(){
                     $('.draggable').draggable({containment: "window", handle : 'header', cursor: "move"});
                 });
+                // init draggable z-index
+                $(document).on('mousedown', '.draggable header', function () {
+                    $('.draggable').css('z-index', 997);
+                    $(this).parents('.draggable').css('z-index', 998);
+                });
             }
         }
     };
@@ -415,7 +474,7 @@
             var id = this.USER_ID_PRE + user.uid;
             var html = '';
             html +='<li id="'+id+'">';
-            html +='    <a href="#"><img src="'+user.avatar+'" /></a>';
+            html +='    <a href="#"><img' + (user.present == minions.user.OFFLINE ? ' class="gray"' : '') + ' src="'+user.avatar+'" /></a>';
             html +='    <p class="name">'+user.nick+'</p>';
             html +='    <p class="desc"><span class="marquee">'+user.motto+'</span></p>';
             html +='</li>';
@@ -437,6 +496,7 @@
         },
         removeUser: function(uid){
             var id = this.USER_ID_PRE + uid;
+            console.log(id);
             $('#' + id).remove();
         },
         USER_CONTEXT_ID: 'recommend-user-context',
@@ -680,6 +740,7 @@
                     var user = minions.response.getResponseBody(data);
                     if(minions.widget.chat.addUser(user)){
                         minions.widget.regBox.hide();
+                        minions.widget.recommend.removeUser(user.uid);
                         minions.widget.chatBox.createForNewUser(user);
                     }else{
                         minions.alert('user already login');
@@ -711,6 +772,7 @@
                     var user = minions.response.getResponseBody(data);
                     if(minions.widget.chat.addUser(user)){
                         minions.widget.regBox.hide();
+                        minions.widget.recommend.removeUser(user.uid);
                         minions.widget.chatBox.createForNewUser(user);
                     }else{
                         minions.alert('user already login');
@@ -922,9 +984,6 @@
                 if(roster){
                     roster = minions.roster.updateRoster(user,targetId, minions.roster.STATUS_AGREE, roster.remark, roster.group_id, roster.rank);
                     if(roster){
-                        roster.user = minions.userManager.getUser(roster.target_id);
-                        minions.userRosterGroupManager.addUserRoster(uid, roster.group_id, roster);
-                        minions.widget.chatBox.refreshUserRosterView(roster.uid);
                         minions.alert('operation success');
                         $container.remove();
                     }else{
@@ -1130,7 +1189,7 @@
             var id = this.getId(this.CONTACT,roster.uid,roster.target_id,1,null,null);
             var name = roster.remark ? roster.remark + '[' + target.nick + ']' : target.nick;
             var html ='        <li id="'+id+'">';
-            html +='            <a href="#"><img src="'+target.avatar+'" /></a>';
+            html +='            <a href="#"><img' + (target.present == minions.user.OFFLINE ? ' class="gray"' : '') + ' src="'+target.avatar+'" /></a>';
             html +='            <p class="name">'+name+'</p>';
             html +='            <p class="desc"><span></span><span class="marquee">'+target.motto+'</span></p>';
             html +='        </li>';
@@ -1580,7 +1639,7 @@
             html +='<div class="chat-ml">';
             html +='    <img class="avatar" src="'+user.avatar+'" />';
             html +='    <p class="name">'+user.nick+'</p>';
-            html +='    <p class="content">'+packet.getText()+'</p>';
+            html +='    <p class="content">'+minions.htmlspecialchars(packet.getText())+'</p>';
             html +='</div>';
             return html;
         },
@@ -1726,10 +1785,10 @@
         var demo = {};
         demo.user = {uid: 1000000, nick: 'yaoguai', motto: 'make jegarn better!', avatar: 'upload/avatar/default/b6.jpg'};
         demo.users = [
-            {uid: 1000001, nick: 'Jack', motto: 'to be or not to be is a question!', avatar: 'upload/avatar/default/b1.jpg'},
-            {uid: 1000002, nick: 'lucy', motto: 'let\'s jump!', avatar: 'upload/avatar/default/g0.jpg'},
-            {uid: 1000003, nick: 'fly100%', motto: 'yes, ppg!', avatar: 'upload/avatar/default/b2.jpg'},
-            {uid: 1000004, nick: 'rick', motto: 'how many walkers have you killed?', avatar: 'upload/avatar/default/b3.jpg'}
+            {uid: 1000001, nick: 'Jack', motto: 'to be or not to be is a question!', avatar: 'upload/avatar/default/b1.jpg', 'present' : minions.user.ONLINE},
+            {uid: 1000002, nick: 'lucy', motto: 'let\'s jump!', avatar: 'upload/avatar/default/g0.jpg', 'present' : minions.user.OFFLINE},
+            {uid: 1000003, nick: 'fly100%', motto: 'yes, ppg!', avatar: 'upload/avatar/default/b2.jpg', 'present' : minions.user.ONLINE},
+            {uid: 1000004, nick: 'rick', motto: 'how many walkers have you killed?', avatar: 'upload/avatar/default/b3.jpg', 'present' : minions.user.ONLINE}
         ];
         demo.groups = [
             {group_id: 2000000, name: 'default', rosters: [

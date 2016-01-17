@@ -10,7 +10,7 @@ class ApiRequest{
     }
 
     public static function getParam($key, $default = null){
-
-        return isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : $default);
+        // i don't need client push js code, so encode all for prevent xss
+        return isset($_POST[$key]) ? htmlspecialchars($_POST[$key]) : (isset($_GET[$key]) ? htmlspecialchars($_GET[$key]) : $default);
     }
 }

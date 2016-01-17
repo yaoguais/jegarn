@@ -2,6 +2,7 @@
 
 namespace minions\model;
 use minions\util\ConvertUtil;
+use minions\util\JegarnUtil;
 
 class User extends Base{
 
@@ -15,9 +16,13 @@ class User extends Base{
     public $token;
     public $reg_ip;
 
+    const OFFLINE = 0;
+    const ONLINE = 1;
+
     public function toArray() {
         $result = ConvertUtil::objectToArray($this,$dst, ['id' => 'uid', 'username' => 'account', 'nick', 'motto', 'token']);
         $result['avatar'] = $this->avatar ? PIC_HOST . $this->avatar : null;
+        $result['present'] = JegarnUtil::getUserPresent($this->id);
         return $result;
     }
 

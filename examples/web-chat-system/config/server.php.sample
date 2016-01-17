@@ -15,7 +15,9 @@ return [
         'worker_num'    => 4,
         'dispatch_mode' => 2,
         'log_file'      => __DIR__ . '/../logs/server_swoole.log',
-        'daemonize'     => 1
+        //'daemonize'     => 1,
+        'ssl_cert_file' => __DIR__ . '/ssl.crt',
+        'ssl_key_file' => __DIR__ . '/ssl.key'
     ],
     'listener' => [
         'jegarn\listener\AuthPacketListener', // always add to first, not authorized user would do nothing

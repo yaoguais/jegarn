@@ -140,7 +140,9 @@ return [
         'package_body_offset'   => 4,
         'package_max_length'    => 2048,
         'socket_buffer_size'    => 1024 * 1024 * 2,
-        'daemonize'             => 1
+        'daemonize'             => 1,
+        'ssl_cert_file'         => __DIR__ . '/ssl.crt',
+        'ssl_key_file'          => __DIR__ . '/ssl.key'
     ]
 ];
 EOF;

@@ -317,6 +317,7 @@ namespace jegarn\manager{
     use Redis;
     use jegarn\cache\Cache;
     use jegarn\util\ConvertUtil;
+    use swoole_client;
     class BaseManager {
         private static $instance;
         private function __construct(){}
@@ -451,50 +452,53 @@ namespace jegarn\manager{
         public static function getInstance($class = __CLASS__){
             return parent::getInstance($class);
         }
-        public function closeClient($host, $port){
-            $id = $this->getClientId($host, $port);
+        public function closeClient($id){
             if(isset($this->clients[$id])){
-                if(is_resource($this->clients[$id])){
-                    fclose($this->clients[$id]);
-                }
+                $this->clients[$id] = null;
                 unset($this->clients[$id]);
             }
         }
-        public function sendClientMessage($host, $port, $message){
+
+        public function sendClientMessage($host, $port, $message, $options){
             $id = $this->getClientId($host, $port);
             if(empty($message)){
                 return false;
             }
             if(!isset($this->clients[$id])){
-                if($fd = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)){
-                    $this->clients[$id] = $fd;
+                $ssl = isset($options['ssl_cert_file']) && $options['ssl_cert_file'];
+                if($client = new swoole_client($ssl ? SWOOLE_SOCK_TCP | SWOOLE_SSL : SWOOLE_SOCK_TCP)){
+                    $this->clients[$id] = $client;
                 }else{
                     return false;
                 }
-                if(!socket_connect($fd, $host, $port)){
+                if(!$client->connect($host, $port, isset($options['timeout']) ? $options['timeout'] : 0.5)){
+                    $this->closeClient($id);
                     return false;
                 }
             }
-            $fd = $this->clients[$id];
+            $client = $this->clients[$id];
             $retryCount = 3;
             send_data:
             --$retryCount;
             $messageLen = strlen($message);
-            $ret = socket_write($fd,$message, $messageLen);
+            $ret = $client->send($message);
             if($ret === $messageLen){
                 return true;
             }else if($retryCount <= 0){
+                $this->closeClient($id);
                 return false;
             }else if(false === $ret){
-                if(!socket_connect($fd, $host, $port)){
+                if(!$client->connect($host, $port, isset($options['timeout']) ? $options['timeout'] : 0.1)){
+                    $this->closeClient($id);
                     return false;
                 }
                 goto send_data;
-            }else/* if($ret !== $messageLen)*/{
+            }else/*if($ret !== $messageLen)*/{
                 $message = substr($message, $ret);
                 goto send_data;
             }
         }
+
         protected function getClientId($host, $port){
             return $host . ':' . $port;
         }
@@ -508,6 +512,7 @@ namespace jegarn\server{
     use jegarn\cache\Cache;
     use Exception;
     class Server{
+        protected $config;
         protected $localAddress;
         protected $localPort;
         protected $remoteAddress;
@@ -528,6 +533,7 @@ namespace jegarn\server{
                 $this->remoteAddress = $config['remoteAddress'];
                 $this->remotePort = $config['remotePort'];
                 $this->serverId = $config['serverId'];
+                $this->config = $config;
                 return $this;
             }else{
                 throw new Exception('server config is not completed');
@@ -540,7 +546,7 @@ namespace jegarn\server{
             $data = $packet->convertToArray();
             $data[$this->serverKey] = $this->serverId;
             $packetStr = ConvertUtil::pack($data);
-            SocketManager::getInstance()->sendClientMessage($this->remoteAddress, $this->remotePort, pack('N',strlen($packetStr)).$packetStr);
+            SocketManager::getInstance()->sendClientMessage($this->remoteAddress, $this->remotePort, pack('N',strlen($packetStr)).$packetStr, $this->config);
         }
     }
 }
@@ -691,13 +697,17 @@ namespace jegarn\client{
             parent::connect();
             if(!$this->running){
                 $this->running = true;
-                $this->socket = new swoole_client(SWOOLE_SOCK_TCP, SWOOLE_SOCK_ASYNC);
+                $ssl = isset($this->config['ssl_cert_file']) && $this->config['ssl_cert_file'];
+                $this->socket = new swoole_client($ssl ? SWOOLE_SOCK_TCP | SWOOLE_SSL : SWOOLE_SOCK_TCP, SWOOLE_SOCK_ASYNC);
                 $this->socket->set($this->config);
                 $this->socket->on("error", [$this, 'onError']);
                 $this->socket->on("close", [$this, 'onClose']);
                 $this->socket->on("connect", [$this, 'onConnect']);
                 $this->socket->on("receive", [$this, 'onReceive']);
                 $this->socket->connect($this->host, $this->port);
+                if($ssl){
+                    sleep(5); // sleep for connect
+                }
             }
         }
 

@@ -15,6 +15,7 @@ use jegarn\packet\GroupRefusedNotification;
 use jegarn\packet\GroupRequestNotification;
 use jegarn\packet\TextChat;
 use jegarn\server\Server;
+use minions\model\User;
 
 abstract class JegarnUtil{
 
@@ -143,5 +144,10 @@ abstract class JegarnUtil{
         $packet->to = intval($to);
         $packet->setText($text);
         Server::getInstance()->sendPacket($packet);
+    }
+
+    public static function getUserPresent($uid){
+        $ret = UserManager::getInstance()->isUserOnline(intval($uid));
+        return $ret ? User::ONLINE : User::OFFLINE;
     }
 }

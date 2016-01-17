@@ -33,6 +33,8 @@ application.chat.localPort                    = 80
 application.chat.remoteAddress                = '192.168.199.243'
 application.chat.remotePort                   = 9501
 application.chat.serverId                     = '1acee9d52668ca37f645411f39fce3c0'
+application.chat.ssl_cert_file                = APPLICATION_PATH "/../config/ssl.crt"
+application.chat.ssl_key_file                 = APPLICATION_PATH "/../config/ssl.key"
 
 [develop : common]
 
@@ -52,3 +54,5 @@ application.chat.localPort                    = 80
 application.chat.remoteAddress                = '192.168.199.243'
 application.chat.remotePort                   = 9501
 application.chat.serverId                     = '1acee9d52668ca37f645411f39fce3c0'
+application.chat.ssl_cert_file                = APPLICATION_PATH "/../config/ssl.crt"
+application.chat.ssl_key_file                 = APPLICATION_PATH "/../config/ssl.key"

@@ -164,7 +164,7 @@ class SwooleServer extends Server{
         $data = $packet->convertToArray();
         $data[$this->serverKey] = $this->serverId;
         $packetStr = ConvertUtil::pack($data);
-        $ret = SocketManager::getInstance()->sendClientMessage($session->getServerAddress(), $session->getServerPort(), pack('N', strlen($packetStr)) . $packetStr);
+        $ret = SocketManager::getInstance()->sendClientMessage($session->getServerAddress(), $session->getServerPort(), pack('N', strlen($packetStr)) . $packetStr, $this->config);
         if(false === $ret){
             Logger::addInfo('send remote server failed, dispatch again (fd:' . $session->getFd() . ') ');
             $session->setReachable(false);
@@ -180,7 +180,8 @@ class SwooleServer extends Server{
 
     public function start(){
         if(!$this->running){
-            $server = new swoole_server($this->config['host'], $this->config['port'], SWOOLE_PROCESS, SWOOLE_SOCK_TCP);
+            $ssl = isset($this->config['ssl_cert_file']) && $this->config['ssl_cert_file'];
+            $server = new swoole_server($this->config['host'], $this->config['port'], SWOOLE_PROCESS, $ssl ? SWOOLE_SOCK_TCP | SWOOLE_SSL : SWOOLE_SOCK_TCP);
             $server->set($this->config);
             $server->on('connect', [$this, 'onSwooleConnect']);
             $server->on('receive', [$this, 'onSwooleReceive']);

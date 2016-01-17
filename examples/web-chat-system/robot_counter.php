@@ -71,13 +71,6 @@ $client->setPacketListener(function(Base $pkt, $client){
             $client->sendPacket($packet);
             break;
         case Chatroom::TYPE:
-            $packet = new TextChatroom();
-            /* @var TextGroupChat $packet */
-            $packet = $packet->getPacketFromPacket($pkt);
-            $packet->from = $pkt->to;
-            $packet->setSendToAll();
-            $packet->setText($introduction);
-            $client->sendPacket($packet);
             break;
     }
 });
@@ -103,13 +96,6 @@ swoole_timer_add(30000,function($interval) use($client, $infiniteCounterHandler)
         $groupchat->setGroupId(COUNTER_GROUP_ID);
         $groupchat->setText($infiniteCounterHandler->increase());
         $client->sendPacket($groupchat);
-        // send chatroom
-        $chatroom = new TextChatroom();
-        $chatroom->from = COUNTER_UID;
-        $chatroom->setSendToAll();
-        $chatroom->setGroupId(COUNTER_CHATROOM_ID);
-        $chatroom->setText($infiniteCounterHandler->increase());
-        $client->sendPacket($chatroom);
     }
 });
 $client->connect();

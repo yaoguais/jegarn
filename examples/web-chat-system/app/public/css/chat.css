@@ -56,6 +56,15 @@ marquee,.marquee {
 　　-webkit-marquee-style:scroll;
 　　-webkit-marquee-repetition:3;
 }
+/*gray*/
+.gray{
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    filter: gray;
+}
 /* dock */
 .dock{
     position: absolute;
@@ -466,7 +475,7 @@ marquee,.marquee {
     -moz-box-shadow: 1px 2px 5px rgba(0,0,0,.31);
     box-shadow: 1px 2px 5px rgba(0,0,0,.31);
     border: solid 1px #cbc9c9;
-    z-index: 9999;
+    z-index: 999;
 }
 
 .register input[type=radio] {
