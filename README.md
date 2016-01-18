@@ -74,7 +74,7 @@ start a websocket server
 	
 	$ php webserver.php 192.168.1.2 9503
 
-all server use same cache can communicate with each other, and them form a cluster.
+all server use same cache can communicate with each other, and they form a cluster.
 
 
 #### Start Client

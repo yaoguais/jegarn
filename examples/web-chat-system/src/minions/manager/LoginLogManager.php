@@ -13,7 +13,7 @@ class LoginLogManager extends BaseManager {
 
     const ADD_LOGIN_LOG =  'INSERT INTO `m_login_log`(uid,create_time,ip,status) VALUES(?,?,?,?)';
     const COUNT_BY_STATUS =  'SELECT count(*) FROM `m_login_log` WHERE uid = ? and create_time > ? and status = ?';
-    const GET_LATEST_USER = 'SELECT distinct uid from `m_login_log` where status=1 order by id desc limit :offset,:limit';
+    const GET_LATEST_USER = 'SELECT distinct uid,max(id) as mid from `m_login_log` where status=1 group by uid order by mid desc limit :offset,:limit';
 
     public static function getInstance($class = __CLASS__) {
         return parent::getInstance($class);
