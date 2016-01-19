@@ -112,12 +112,18 @@ class WebsocketBufferProcessor extends BufferProcessor{
             case 0x8:
                 $return = self::$CLOSE;
                 return true;
-            case 0x9:
+            case 0x9:// client send a ping response a pong
                 $return = self::$PONG;
-                if(!$dataLen) return true;
+                if(!$dataLen){
+                    $currentBuffer = substr($currentBuffer, self::MIN_HEAD_LEN) ? : '';
+                    return true;
+                }
                 break;
-            case 0xa:
-                if(!$dataLen) return true;
+            case 0xa:// client send a pong, do nothing
+                if(!$dataLen){
+                    $currentBuffer = substr($currentBuffer, self::MIN_HEAD_LEN) ? : '';
+                    return true;
+                }
                 break;
             default :
                goto packet_crashed;

@@ -164,6 +164,17 @@ there is no redis yum repo, install it by source code.
 	> flush privileges;
 	> exit
 
+complete your own configurations
+
+	# cd /var/www/jegarn/examples/web-chat-system/config
+	# cp application.ini.sample application.ini
+	# vim application.ini
+	# cp server.php.sample server.php
+	# vim server.php
+	# cp webserver.php.sample webserver.php
+	# vim webserver.php
+
+
 init a defualt user data with run script install.php
 
 	# cd /var/www/jegarn/examples/web-chat-system
@@ -181,6 +192,7 @@ change owner of upload
 
 	# cd /var/www/jegarn/examples/web-chat-system/app/public
 	# chown nginx:nginx upload -R
+	
 
 create a user to run server webserver robot_counter
 

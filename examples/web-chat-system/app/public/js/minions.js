@@ -1625,7 +1625,7 @@
             html +='<div class="chat-mr">';
             html +='    <img class="avatar" src="'+user.avatar+'" />';
             html +='    <p class="name">'+user.nick+'</p>';
-            html +='    <p class="content">'+packet.getText()+'</p>';
+            html +='    <p class="content">'+minions.htmlspecialchars(packet.getText())+'</p>';
             html +='</div>';
             return html;
         },

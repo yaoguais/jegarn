@@ -1,5 +1,5 @@
 .idea/
-logs/*
+logs/
 tmp/
 phpinfo.php
 nohup.out

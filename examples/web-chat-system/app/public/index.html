@@ -73,13 +73,15 @@
     (function($){
         window_load_adjust();
         function window_load_adjust(){
-            var header_max_height = $(window).height() - $('nav').height();
-            if(header_max_height > 700){
-                $('header').height(header_max_height);
-                $('header .description').css('margin-top','80px');
-            }else{
-                $('header').height(700);
-                $('header .description').css('margin-top','0px');
+            if($(window).width() >= 600){
+                var header_max_height = $(window).height() - $('nav').height();
+                if(header_max_height > 700){
+                    $('header').height(header_max_height);
+                    $('header .description').css('margin-top','80px');
+                }else{
+                    $('header').height(700);
+                    $('header .description').css('margin-top','0px');
+                }
             }
         }
         $(window).resize(window_load_adjust);

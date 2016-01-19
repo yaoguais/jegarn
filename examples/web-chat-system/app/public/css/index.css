@@ -166,3 +166,75 @@ footer a:hover{
 .footer-link-right{
     width: 33.33333%;
 }
+
+/* for mobile */
+@media screen and (max-width: 600px) {
+    nav {
+        height: 40px;
+    }
+    nav .row{
+        height: 40px;
+    }
+    nav a{
+        padding: 10px 6px;
+        font-size: 12px;
+    }
+    .nav-header{
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 30px;
+        padding: 5px 0;
+        margin: 0;
+    }
+    .nav-header a{
+        margin-left: 0;
+    }
+    nav .nav-header img{
+        height: 30px;
+    }
+    .nav-items li{
+        height: 40px;
+    }
+    .nav-items li a{
+        font-size: 12px;
+    }
+    .row{
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    header{
+        height: auto;
+        padding: 100px 0 150px 0;
+        background: url('../images/header-bg.jpg') no-repeat;
+        background-size: 200% auto;
+    }
+    header h2{
+        font-size: 18px;
+    }
+    header h4{
+        font-size: 14px;
+        word-spacing: normal; letter-spacing: normal;
+    }
+    header .started{
+        display: none;
+    }
+    header .content{
+        padding: 10px 0 100px;
+    }
+    header .description{
+        width: auto;
+        padding: 0 5px;
+        font-size: 12px;
+        line-height: normal;
+        text-indent: 10px;
+    }
+    .footer-link-left{
+        width: auto;
+        margin-left: 10px;
+    }
+    .footer-link-right{
+        display: none;
+    }
+}
