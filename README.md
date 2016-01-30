@@ -6,7 +6,10 @@ Integrated authorization, chat, groupchat, chatroom and offline storage.
 
 Website: [https://jegarn.com](https://jegarn.com)
 
-Demo: [https://jegarn.com/minions.html](https://jegarn.com/minions.html)
+Demo
+------
+
+#### WebApp Demo: [https://jegarn.com/minions.html](https://jegarn.com/minions.html)
 
 This demo is referenced by webQQ, and supports
 
@@ -15,6 +18,12 @@ This demo is referenced by webQQ, and supports
 3. create chat group and chat with every member
 4. create chat room and chat with every online people
 5. a always online robot "Counter" for sending a number to everybody
+
+
+#### Android Demo [https://jegarn.com/minions.apk](https://jegarn.com/minions.apk)
+
+Android-App is referenced by WebApp-Demo, and support login and chat.
+
 
 
 

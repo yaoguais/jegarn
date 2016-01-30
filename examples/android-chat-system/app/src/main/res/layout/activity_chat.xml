@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jegarn.minions.activity.ChatActivity">
+
+    <TextView
+        android:id="@+id/text_user_nick"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#242424"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"/>
+    <ListView
+        android:id="@+id/list_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/text_user_nick"
+        android:layout_above="@+id/send_layout"
+        android:divider="@null"
+        android:transcriptMode="alwaysScroll"
+        android:stackFromBottom="true"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"> </ListView>
+    <RelativeLayout
+        android:id="@+id/send_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#242424">
+        <ImageView
+            android:id="@+id/image_send_button"
+            android:layout_width="64dp"
+            android:layout_height="40dp"
+            android:background="@mipmap/send_button"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"/>
+
+        <EditText
+            android:id="@+id/text_send_input"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/image_send_button"
+            android:layout_toStartOf="@+id/image_send_button"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="16dp"
+            android:paddingLeft="5dp"
+            android:background="#FFFFFF"/>
+
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
