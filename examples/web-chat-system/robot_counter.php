@@ -89,13 +89,13 @@ swoole_timer_add(30000,function($interval) use($client, $infiniteCounterHandler)
                 }
             }
         }
-        // send groupchat
+        /*// send groupchat
         $groupchat = new TextGroupChat();
         $groupchat->from = COUNTER_UID;
         $groupchat->setSendToAll();
         $groupchat->setGroupId(COUNTER_GROUP_ID);
         $groupchat->setText($infiniteCounterHandler->increase());
-        $client->sendPacket($groupchat);
+        $client->sendPacket($groupchat);*/
     }
 });
 $client->connect();
