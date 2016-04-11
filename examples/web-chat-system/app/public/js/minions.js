@@ -337,6 +337,8 @@
         minions.widget.recommend.init();
         // login and register change
         minions.widget.regBox.init();
+        // faq article
+        minions.widget.faq.init();
         // chat box init
         minions.widget.chatBox.init();
         // make div draggable
@@ -637,6 +639,20 @@
                 }
                 minions.context.attach(attachId, data, minions.widget.recommend.GROUP_CONTEXT_ID);
             });
+        }
+    };
+    minions.widget.faq = {
+        initialed: false,
+        ID: 'faq',
+        init: function () {
+            if (!this.initialed) {
+                this.initialed = true;
+                var dockObj = minions.widget.dock;
+                dockObj.register(this.ID, 'images/dock-faq.png', false);
+                $('#' + dockObj.ID_PRE + this.ID).click(function(){
+                    window.open('http://yaoguais.com/article/jegarn/faq_zh-cn.html');
+                });
+            }
         }
     };
     minions.widget.regBox = {
