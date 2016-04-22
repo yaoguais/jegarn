@@ -12,7 +12,7 @@ public class App {
     public static String FAKE_USER_UID = "12";
     public static String FAKE_USER_ACCOUNT = "yaoguai";
     public static String FAKE_USER_NICK = "Yao Guai";
-    public static String FAKE_USER_TOKEN    = "2026aa1b3057608c2e9f973066f9a8af";
+    public static String FAKE_USER_TOKEN    = "a03231805fb703d159dbc71633c72b86";
 
 //    public static String SERVER_HOST = "192.168.199.243";
 //    public static String SERVER_URL = "https://192.168.199.243/";

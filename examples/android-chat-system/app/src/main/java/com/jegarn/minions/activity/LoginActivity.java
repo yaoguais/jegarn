@@ -2,6 +2,7 @@ package com.jegarn.minions.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +12,9 @@ import android.widget.Toast;
 import com.google.gson.JsonSyntaxException;
 import com.jegarn.jegarn.client.ByteArray;
 import com.jegarn.jegarn.client.Convert;
+import com.jegarn.jegarn.client.DefaultListener;
 import com.jegarn.jegarn.client.DefaultX509TrustManager;
+import com.jegarn.jegarn.manager.JegarnManager;
 import com.jegarn.jegarn.packet.base.Packet;
 import com.jegarn.jegarn.packet.content.TextChatContent;
 import com.jegarn.jegarn.packet.content.TextGroupContent;
@@ -23,7 +26,6 @@ import com.jegarn.minions.R;
 import com.jegarn.minions.model.User;
 import com.jegarn.minions.response.Response;
 import com.jegarn.minions.response.UserResponse;
-import com.jegarn.minions.utils.JegarnUtil;
 import com.jegarn.minions.utils.JsonUtil;
 import com.jegarn.minions.utils.SdUtil;
 import com.jegarn.minions.utils.StringUtil;
@@ -52,7 +54,7 @@ import okhttp3.Call;
 public class LoginActivity extends Activity implements View.OnClickListener {
 
     EditText accountEditText, passwordEditText;
-    Button submitButton;
+    Button submitButton, fakeSubmitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +64,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         this.accountEditText = (EditText) findViewById(R.id.accountEditText);
         this.passwordEditText = (EditText) findViewById(R.id.passwordEditText);
         this.submitButton = (Button) findViewById(R.id.submitButton);
+        this.fakeSubmitButton = (Button) findViewById(R.id.fakeSubmitButton);
+        this.fakeSubmitButton.setBackgroundColor(Color.TRANSPARENT);
 
         this.submitButton.setOnClickListener(this);
+        this.fakeSubmitButton.setOnClickListener(this);
 //        this.testSendMsgpack();
 //        this.testRecvMsgpack();
 //        this.testConnectSslServer();
@@ -72,24 +77,32 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-//        if (fakeLogin()) {
-//            Toast.makeText(getApplicationContext(), "fake login", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-        String account = this.accountEditText.getText().toString();
-        if (StringUtil.isEmptyString(account)) {
-            Toast.makeText(getApplicationContext(), "account is empty", Toast.LENGTH_SHORT).show();
-            return;
+        final int id = v.getId();
+
+        if (R.id.fakeSubmitButton == id) {
+            if (fakeLogin()) {
+                Toast.makeText(getApplicationContext(), "fake login", Toast.LENGTH_SHORT).show();
+            }
+        } else if (R.id.submitButton == id) {
+            String account = this.accountEditText.getText().toString();
+            if (StringUtil.isEmptyString(account)) {
+                Toast.makeText(getApplicationContext(), "account is empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (App.FAKE_USER_ACCOUNT.equals(account)) {
+                Toast.makeText(getApplicationContext(), "account " + App.FAKE_USER_ACCOUNT + " is not allowed login", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String password = this.passwordEditText.getText().toString();
+            if (StringUtil.isEmptyString(password)) {
+                Toast.makeText(getApplicationContext(), "password is empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Map<String, String> params = new HashMap<>();
+            params.put("account", account);
+            params.put("password", password);
+            OkHttpUtils.post().url(App.getUrl(App.API_LOGIN)).params(params).build().execute(new LoginCallback());
         }
-        String password = this.passwordEditText.getText().toString();
-        if (StringUtil.isEmptyString(password)) {
-            Toast.makeText(getApplicationContext(), "password is empty", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Map<String, String> params = new HashMap<>();
-        params.put("account", account);
-        params.put("password", password);
-        OkHttpUtils.post().url(App.getUrl(App.API_LOGIN)).params(params).build().execute(new LoginCallback());
     }
 
     private boolean fakeLogin() {
@@ -100,6 +113,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         App.user.nick = App.FAKE_USER_NICK;
         App.user.token = App.FAKE_USER_TOKEN;
         App.user.present = User.ONLINE;
+        JegarnManager.getInstance().init(App.SERVER_HOST, App.SERVER_PORT, 5000, App.user.account, App.user.token, true, new DefaultListener());
+        JegarnManager.getInstance().run();
         finish();
         return true;
     }
@@ -119,6 +134,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                         WidgetUtil.toast(getApplicationContext(), Response.getMessage(Response.FAIL_SERVER_RESPONSE));
                     } else {
                         App.setUser(resp.response);
+                        User user = resp.response;
+                        JegarnManager.getInstance().init(App.SERVER_HOST, App.SERVER_PORT, 5000, user.account, user.token, true, new DefaultListener());
+                        JegarnManager.getInstance().run();
                         finish();
                     }
                 } else {
@@ -139,7 +157,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onDestroy() {
-        JegarnUtil.run();
         super.onDestroy();
     }
 

@@ -15,13 +15,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jegarn.jegarn.listener.ChatManagerListener;
+import com.jegarn.jegarn.manager.JegarnManager;
 import com.jegarn.jegarn.packet.base.Chat;
 import com.jegarn.jegarn.packet.content.TextChatContent;
 import com.jegarn.jegarn.packet.text.TextChat;
 import com.jegarn.minions.App;
 import com.jegarn.minions.R;
 import com.jegarn.minions.model.Message;
-import com.jegarn.minions.utils.JegarnUtil;
 import com.jegarn.minions.utils.StringUtil;
 import com.jegarn.minions.utils.WidgetUtil;
 
@@ -67,7 +67,7 @@ public class ChatActivity extends Activity implements View.OnClickListener {
             WidgetUtil.toast(this, "message can not be empty");
         } else {
             TextChat packet = new TextChat(fromUserUid, toUserUid, TextChat.TYPE, new TextChatContent(text));
-            if (JegarnUtil.client.sendPacket(packet)) {
+            if (JegarnManager.client.sendPacket(packet)) {
                 Message message = new Message();
                 message.from = fromUserUid;
                 message.to = toUserUid;
@@ -82,7 +82,7 @@ public class ChatActivity extends Activity implements View.OnClickListener {
     }
 
     private void initPacketListener() {
-        JegarnUtil.client.getChatManager().addListener(new ChatManagerListener() {
+        JegarnManager.client.getChatManager().addListener(new ChatManagerListener() {
             @Override
             public boolean processPacket(Chat packet) {
                 System.out.println("[ChatActivity] recv packet");

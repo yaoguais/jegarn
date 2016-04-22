@@ -23,7 +23,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="250dp">
+        android:layout_marginBottom="250dp"
+        android:id="@+id/linearLayout2">
 
         <TextView
             android:layout_width="wrap_content"
@@ -78,4 +79,12 @@
         android:layout_marginBottom="30dp"
         android:textSize="16sp"
         android:textColor="#cccccc"/>
+    <Button
+        android:id="@+id/fakeSubmitButton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="        "
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/linearLayout2"
+        android:layout_alignEnd="@+id/linearLayout2" />
 </RelativeLayout>
