@@ -22,7 +22,9 @@ public class App {
 //    public static String FAKE_USER_TOKEN    = "994dd2c6fdecbb826905070d44578025";
 
     public static final String API_LOGIN = "api/user/login";
+    public static final String API_USER_INFO = "api/user/info";
     public static final String API_LIST_ALL_ROSTER = "api/roster/list_all";
+    public static final String API_LIST_ALL_GROUP = "api/group/list";
     public static String getUrl(String host, String pathInfo){
         return host + pathInfo;
     }

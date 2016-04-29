@@ -3,6 +3,7 @@ package com.jegarn.minions.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.jegarn.jegarn.listener.ChatManagerListener;
 import com.jegarn.jegarn.manager.JegarnManager;
 import com.jegarn.jegarn.packet.base.Chat;
@@ -41,6 +44,7 @@ public class ChatActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fresco.initialize(this.getApplicationContext());
         setContentView(R.layout.activity_chat);
         fromUserUid = App.user.uid;
         fromUserAvatar = App.user.avatar;
@@ -142,7 +146,7 @@ public class ChatActivity extends Activity implements View.OnClickListener {
         private LayoutInflater layoutInflater;
 
         public final class ItemView {
-            public ImageView avatar;
+            public SimpleDraweeView avatar;
             public TextView message;
         }
 
@@ -188,13 +192,13 @@ public class ChatActivity extends Activity implements View.OnClickListener {
             //if (convertView == null) {
                 itemView = new ItemView();
                 convertView = layoutInflater.inflate(isOutMessage ? R.layout.list_out_message_item : R.layout.list_in_message_item, null);
-                itemView.avatar = (ImageView) convertView.findViewById(R.id.image_user_avatar);
+                itemView.avatar = (SimpleDraweeView) convertView.findViewById(R.id.image_user_avatar);
                 itemView.message = (TextView) convertView.findViewById(R.id.text_user_message);
                 convertView.setTag(itemView);
             //} else {
             //    itemView = (ItemView) convertView.getTag();
             //}
-            itemView.avatar.setBackgroundResource(WidgetUtil.getImageId(isOutMessage ? fromUserAvatar : toUserAvatar));
+            itemView.avatar.setImageURI(WidgetUtil.getImageUri(isOutMessage ? fromUserAvatar : toUserAvatar));
             itemView.message.setText(item.content);
             return convertView;
         }

@@ -29,7 +29,8 @@ public class ChatRoomFactory {
             return null;
         }else if(TextGroupChat.SUB_TYPE.equals(subType)){
             try{
-                int groupId = Integer.parseInt((String) content.get("group_id"));
+                Object groupIdObj = content.get("group_id");
+                int groupId = (groupIdObj instanceof String) ? Integer.parseInt((String)groupIdObj) : ((Integer) groupIdObj).intValue();
                 String text = "" + content.get("text");
                 return new TextChatRoom(from, to, type, new TextGroupContent(groupId, text));
             }catch (ClassCastException e){

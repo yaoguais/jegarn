@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.JsonSyntaxException;
 import com.jegarn.minions.App;
 import com.jegarn.minions.R;
@@ -41,6 +44,12 @@ public class ContactFragment extends Fragment implements AdapterView.OnItemClick
     private ListView mFriendListView;
     private Activity mActivity;
     private BaseAdapter mAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Fresco.initialize(this.getActivity().getApplicationContext());
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -127,7 +136,7 @@ public class ContactFragment extends Fragment implements AdapterView.OnItemClick
         private LayoutInflater layoutInflater;
 
         public final class ItemView {
-            public ImageView avatar;
+            public SimpleDraweeView avatar;
             public TextView nick;
             public TextView motto;
         }
@@ -160,7 +169,7 @@ public class ContactFragment extends Fragment implements AdapterView.OnItemClick
             if (convertView == null) {
                 itemView = new ItemView();
                 convertView = layoutInflater.inflate(R.layout.list_friend_item, null);
-                itemView.avatar = (ImageView) convertView.findViewById(R.id.image_avatar);
+                itemView.avatar = (SimpleDraweeView) convertView.findViewById(R.id.image_avatar);
                 itemView.nick = (TextView) convertView.findViewById(R.id.text_nick);
                 itemView.motto = (TextView) convertView.findViewById(R.id.text_motto);
                 convertView.setTag(itemView);
@@ -168,7 +177,7 @@ public class ContactFragment extends Fragment implements AdapterView.OnItemClick
                 itemView = (ItemView) convertView.getTag();
             }
             Map<String, Object> item = items.get(position);
-            itemView.avatar.setBackgroundResource(WidgetUtil.getImageId((String)item.get("avatar")));
+            itemView.avatar.setImageURI(WidgetUtil.getImageUri((String)item.get("avatar")));
             itemView.nick.setText((String) item.get("nick"));
             itemView.motto.setText((String) item.get("motto"));
             return convertView;

@@ -5,6 +5,7 @@ import com.jegarn.jegarn.packet.content.TextGroupContent;
 import com.jegarn.jegarn.packet.text.TextGroupChat;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class GroupChatFactory {
     private static GroupChatFactory instance;
@@ -28,7 +29,8 @@ public class GroupChatFactory {
             return null;
         }else if(TextGroupChat.SUB_TYPE.equals(subType)){
             try{
-                int groupId = Integer.parseInt((String) content.get("group_id"));
+                Object groupIdObj = content.get("group_id");
+                int groupId = (groupIdObj instanceof String) ? Integer.parseInt((String)groupIdObj) : ((Integer) groupIdObj).intValue();
                 String text = "" + content.get("text");
                 return new TextGroupChat(from, to, type, new TextGroupContent(groupId, text));
             }catch (ClassCastException e){

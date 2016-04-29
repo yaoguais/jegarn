@@ -13,4 +13,9 @@
         android:textColor="#FFFFFF"
         android:textSize="20sp"/>
 
+    <ListView android:id="@+id/list_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="48dp"/>
+
 </FrameLayout>

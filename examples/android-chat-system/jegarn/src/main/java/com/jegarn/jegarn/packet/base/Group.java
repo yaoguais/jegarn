@@ -12,6 +12,6 @@ abstract public class Group extends HasSubTypePacket{
         return "all".equals(this.to);
     }
     public void setSendToAll(){
-        this.to = "to";
+        this.to = "all";
     }
 }

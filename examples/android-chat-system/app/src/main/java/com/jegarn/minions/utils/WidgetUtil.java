@@ -1,14 +1,21 @@
 package com.jegarn.minions.utils;
 
 import android.content.Context;
+import android.net.Uri;
 import android.widget.Toast;
 
+import com.jegarn.minions.App;
 import com.jegarn.minions.R;
 
 abstract public class WidgetUtil {
 
     public static void toast(Context context, String message){
         Toast.makeText(context.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static Uri getImageUri(String url) {
+        url = App.SERVER_URL + url.replaceFirst("^/","");
+        return Uri.parse(url);
     }
 
     public static int getImageId(String url){ // fresco will be later.
