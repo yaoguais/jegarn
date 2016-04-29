@@ -28,7 +28,7 @@ public class GroupChatFactory {
             return null;
         }else if(TextGroupChat.SUB_TYPE.equals(subType)){
             try{
-                int groupId = (Integer)content.get("group_id");
+                int groupId = Integer.parseInt((String) content.get("group_id"));
                 String text = "" + content.get("text");
                 return new TextGroupChat(from, to, type, new TextGroupContent(groupId, text));
             }catch (ClassCastException e){
