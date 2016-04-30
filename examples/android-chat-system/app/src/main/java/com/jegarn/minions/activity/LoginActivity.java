@@ -23,6 +23,7 @@ import com.jegarn.jegarn.packet.text.TextChatRoom;
 import com.jegarn.jegarn.packet.text.TextGroupChat;
 import com.jegarn.minions.App;
 import com.jegarn.minions.R;
+import com.jegarn.minions.im.DbRecordListener;
 import com.jegarn.minions.model.User;
 import com.jegarn.minions.response.Response;
 import com.jegarn.minions.response.UserResponse;
@@ -113,7 +114,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         App.user.nick = App.FAKE_USER_NICK;
         App.user.token = App.FAKE_USER_TOKEN;
         App.user.present = User.ONLINE;
-        JegarnManager.getInstance().init(App.SERVER_HOST, App.SERVER_PORT, 5000, App.user.account, App.user.token, true, new DefaultListener());
+        JegarnManager.getInstance().init(App.SERVER_HOST, App.SERVER_PORT,
+                5000, App.user.account, App.user.token, true, new DbRecordListener(this.getApplicationContext()));
         JegarnManager.getInstance().run();
         finish();
         return true;
@@ -135,7 +137,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     } else {
                         App.setUser(resp.response);
                         User user = resp.response;
-                        JegarnManager.getInstance().init(App.SERVER_HOST, App.SERVER_PORT, 5000, user.account, user.token, true, new DefaultListener());
+                        JegarnManager.getInstance().init(App.SERVER_HOST, App.SERVER_PORT,
+                                5000, user.account, user.token, true, new DbRecordListener(LoginActivity.this.getApplicationContext()));
                         JegarnManager.getInstance().run();
                         finish();
                     }

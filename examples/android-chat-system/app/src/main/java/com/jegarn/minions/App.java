@@ -1,9 +1,15 @@
 package com.jegarn.minions;
 
+import android.app.Application;
+
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.jegarn.minions.entity.Message;
 import com.jegarn.minions.model.User;
+import com.orm.SugarApp;
+import com.orm.SugarContext;
 import com.zhy.http.okhttp.OkHttpUtils;
 
-public class App {
+public class App extends Application{
     public static boolean DEBUG = true;
 
     public static String SERVER_HOST = "jegarn.com";
@@ -47,5 +53,18 @@ public class App {
         if(DEBUG){
             OkHttpUtils.getInstance().debug(null);
         }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Fresco.initialize(this.getApplicationContext());
+        SugarContext.init(this.getApplicationContext());
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        SugarContext.terminate();
     }
 }

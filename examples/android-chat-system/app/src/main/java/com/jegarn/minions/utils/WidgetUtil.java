@@ -1,13 +1,23 @@
 package com.jegarn.minions.utils;
 
+import android.app.Service;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Vibrator;
 import android.widget.Toast;
 
 import com.jegarn.minions.App;
 import com.jegarn.minions.R;
 
 abstract public class WidgetUtil {
+    private static Vibrator vibrator;
+
+    public static void vivrator(Context context){
+        if(vibrator == null){
+            vibrator=(Vibrator)context.getSystemService(Service.VIBRATOR_SERVICE);
+        }
+        vibrator.vibrate(600);
+    }
 
     public static void toast(Context context, String message){
         Toast.makeText(context.getApplicationContext(), message, Toast.LENGTH_SHORT).show();

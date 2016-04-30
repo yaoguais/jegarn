@@ -31,6 +31,7 @@ import com.jegarn.jegarn.packet.text.TextChatRoom;
 import com.jegarn.jegarn.packet.text.TextGroupChat;
 import com.jegarn.minions.App;
 import com.jegarn.minions.R;
+import com.jegarn.minions.manager.UserManager;
 import com.jegarn.minions.model.Group;
 import com.jegarn.minions.model.Message;
 import com.jegarn.minions.model.User;
@@ -63,7 +64,6 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fresco.initialize(this.getApplicationContext());
         setContentView(R.layout.activity_chat);
         fromUserUid = App.user.uid;
         fromUserAvatar = App.user.avatar;
@@ -76,12 +76,34 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
         System.out.println("group onCreate group_id: " + toGroupId + " type: " + toGroupType);
         mUserNickTextView.setText(toGroupName);
         mMessageListView = (ListView) findViewById(R.id.list_message);
-        mMessageAdapter = new MessageAdapter(this, null);
+        this.initMessageAdapter();
         mMessageListView.setAdapter(mMessageAdapter);
         mInputEditText = (EditText) findViewById(R.id.text_send_input);
         mSendButton = (ImageView) findViewById(R.id.image_send_button);
         mSendButton.setOnClickListener(this);
         this.initPacketListener();
+    }
+
+    private void initMessageAdapter() {
+        int type  = toGroupType == Group.TYPE_GROUP ? com.jegarn.minions.entity.Message.TYPE_GROUPCHAT
+                : com.jegarn.minions.entity.Message.TYPE_CHATROOM;
+        List<com.jegarn.minions.entity.Message> dbMessages = com.jegarn.minions.entity.Message.listAllByType(
+                type, fromUserUid, null, toGroupId
+        );
+        LinkedList<Message> messages = null;
+        if (dbMessages != null) {
+            messages = new LinkedList<>();
+            for (com.jegarn.minions.entity.Message dbMessage : dbMessages) {
+                Message message = new Message();
+                message.from = dbMessage.getFromUid();
+                message.fromAvatar = dbMessage.getFromAvatar();
+                message.to = dbMessage.getToUid();
+                message.type = Message.TYPE_TEXT;
+                message.content = dbMessage.getContent();
+                messages.add(message);
+            }
+        }
+        mMessageAdapter = new MessageAdapter(this, messages);
     }
 
     @Override
@@ -103,6 +125,20 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
                 message.content = text;
                 mMessageAdapter.addMessage(message, true);
                 mInputEditText.setText(null);
+
+                int dbMessageType  = toGroupType == Group.TYPE_GROUP ? com.jegarn.minions.entity.Message.TYPE_GROUPCHAT
+                        : com.jegarn.minions.entity.Message.TYPE_CHATROOM;
+                com.jegarn.minions.entity.Message dbMessage = new com.jegarn.minions.entity.Message(
+                        fromUserUid,
+                        fromUserAvatar,
+                        message.to,
+                        toGroupId,
+                        dbMessageType,
+                        TextGroupChat.SUB_TYPE,
+                        text,
+                        0
+                );
+                com.jegarn.minions.entity.Message.saveNewMessage(dbMessage);
             } else {
                 WidgetUtil.toast(this, "send message failed");
             }
@@ -162,67 +198,40 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
         });
     }
 
-    private static Map<String, User> users = new HashMap<>();
+    public void getFromUserInfoAndAppendMessage(Message message)
+    {
+        UserManager.loadUser(this.getApplicationContext(), message.from, new GroupMessageLoadListener(message));
+    }
 
-    private void getFromUserInfoAndAppendMessage(Message message) {
-        User user = users.get(message.from);
-        if (user != null) {
+    public class GroupMessageLoadListener extends UserManager.UserLoaderListener{
+        Message message;
+        public GroupMessageLoadListener(Message message) {
+            this.message = message;
+        }
+
+        @Override
+        public void loadSuccess(User user) {
             message.fromAvatar = user.avatar;
             android.os.Message msg = mHandler.obtainMessage();
             msg.what = MSG_RECV_CHAT_PACKET;
             msg.obj = message;
             msg.sendToTarget();
-        } else {
-            System.out.println("group message, user: " + message.from + " not cached");
-            OkHttpUtils.get().addParams("uid", App.user.uid).addParams("token", App.user.token)
-                    .addParams("user_id", message.from)
-                    .url(App.getUrl(App.API_USER_INFO))
-                    .build().execute(new UserInfoCallback(message));
-        }
-    }
 
-    public final class UserInfoCallback extends StringCallback {
+            WidgetUtil.vivrator(GroupChatActivity.this.getApplicationContext());
 
-        private Message message;
-
-        public UserInfoCallback(Message message) {
-            this.message = message;
-        }
-
-        @Override
-        public void onError(Call call, Exception e) {
-            WidgetUtil.toast(getApplicationContext(), Response.getMessage(Response.FAIL_NETWORK));
-            e.printStackTrace();
-        }
-
-        @Override
-        public void onResponse(String str) {
-            try {
-                Response resp = JsonUtil.fromJson(str, Response.class);
-                if (Response.isSuccess(resp.code)) {
-                    if (resp.response == null) {
-                        WidgetUtil.toast(getApplicationContext(), Response.getMessage(Response.FAIL_SERVER_RESPONSE));
-                    } else {
-                        Map userMap = (Map) resp.response;
-                        User user = new User();
-                        user.uid = (String) userMap.get("uid");
-                        user.account = (String) userMap.get("account");
-                        user.nick = (String) userMap.get("nick");
-                        user.avatar = (String) userMap.get("avatar");
-                        user.motto = (String) userMap.get("motto");
-                        users.put(user.uid, user);
-                        message.fromAvatar = user.avatar;
-                        android.os.Message msg = mHandler.obtainMessage();
-                        msg.what = MSG_RECV_CHAT_PACKET;
-                        msg.obj = message;
-                        msg.sendToTarget();
-                    }
-                } else {
-                    WidgetUtil.toast(getApplicationContext(), Response.getMessage(resp.code));
-                }
-            } catch (JsonSyntaxException e) {
-                WidgetUtil.toast(getApplicationContext(), Response.getMessage(str));
-            }
+            int dbMessageType  = toGroupType == Group.TYPE_GROUP ? com.jegarn.minions.entity.Message.TYPE_GROUPCHAT
+                    : com.jegarn.minions.entity.Message.TYPE_CHATROOM;
+            com.jegarn.minions.entity.Message dbMessage = new com.jegarn.minions.entity.Message(
+                    message.from,
+                    message.fromAvatar,
+                    message.to,
+                    toGroupId,
+                    dbMessageType,
+                    TextGroupChat.SUB_TYPE,
+                    message.content,
+                    0
+            );
+            com.jegarn.minions.entity.Message.saveNewMessage(dbMessage);
         }
     }
 
@@ -254,7 +263,7 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
     public final class MessageAdapter extends BaseAdapter {
 
         private Context context;
-        private List<Message> messages;
+        private LinkedList<Message> messages;
         private LayoutInflater layoutInflater;
 
         public final class ItemView {
@@ -262,17 +271,25 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
             public TextView message;
         }
 
-        public MessageAdapter(Context context, List<Message> messages) {
+        public MessageAdapter(Context context, LinkedList<Message> messages) {
             this.context = context;
             this.messages = messages;
             layoutInflater = LayoutInflater.from(context);
         }
 
         public void addMessage(Message message, boolean refresh) {
+            addMessage(message, refresh, true);
+        }
+
+        public void addMessage(Message message, boolean refresh, boolean append) {
             if (messages == null) {
                 messages = new LinkedList<>();
             }
-            messages.add(message);
+            if (append) {
+                messages.add(message);
+            } else {
+                messages.addFirst(message);
+            }
             if (refresh) {
                 notifyDataSetChanged();
             }

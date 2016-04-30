@@ -46,7 +46,6 @@ public class ChatroomFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Fresco.initialize(this.getActivity().getApplicationContext());
         super.onCreate(savedInstanceState);
     }
 

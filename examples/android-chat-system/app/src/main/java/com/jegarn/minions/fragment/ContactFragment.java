@@ -47,7 +47,6 @@ public class ContactFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Fresco.initialize(this.getActivity().getApplicationContext());
         super.onCreate(savedInstanceState);
     }
 

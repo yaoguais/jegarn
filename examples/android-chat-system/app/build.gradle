@@ -8,8 +8,8 @@ android {
         applicationId "com.jegarn.minions"
         minSdkVersion 11
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 10100
+        versionName "1.1.0"
     }
     buildTypes {
         release {
@@ -32,5 +32,6 @@ dependencies {
     compile 'com.zhy:okhttputils:2.2.0'
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.facebook.fresco:fresco:0.10.0'
+    compile 'com.github.satyan:sugar:1.4'
     compile project(':jegarn')
 }

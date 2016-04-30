@@ -3,7 +3,6 @@ package com.jegarn.minions.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.jegarn.jegarn.listener.ChatManagerListener;
 import com.jegarn.jegarn.manager.JegarnManager;
@@ -44,7 +42,6 @@ public class ChatActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fresco.initialize(this.getApplicationContext());
         setContentView(R.layout.activity_chat);
         fromUserUid = App.user.uid;
         fromUserAvatar = App.user.avatar;
@@ -56,12 +53,32 @@ public class ChatActivity extends Activity implements View.OnClickListener {
         toUserAvatar = bundle.getString("avatar");
         mUserNickTextView.setText(toUserNick);
         mMessageListView = (ListView) findViewById(R.id.list_message);
-        mMessageAdapter = new MessageAdapter(this, null);
+        this.initMessageAdapter();
         mMessageListView.setAdapter(mMessageAdapter);
         mInputEditText = (EditText) findViewById(R.id.text_send_input);
         mSendButton = (ImageView) findViewById(R.id.image_send_button);
         mSendButton.setOnClickListener(this);
         this.initPacketListener();
+    }
+
+    private void initMessageAdapter() {
+        List<com.jegarn.minions.entity.Message> dbMessages = com.jegarn.minions.entity.Message.listAllByType(
+                com.jegarn.minions.entity.Message.TYPE_CHAT, fromUserUid, toUserUid, 0
+        );
+        LinkedList<Message> messages = null;
+        if (dbMessages != null) {
+            messages = new LinkedList<>();
+            for (com.jegarn.minions.entity.Message dbMessage : dbMessages) {
+                Message message = new Message();
+                message.from = dbMessage.getFromUid();
+                message.fromAvatar = dbMessage.getFromAvatar();
+                message.to = dbMessage.getToUid();
+                message.type = Message.TYPE_TEXT;
+                message.content = dbMessage.getContent();
+                messages.add(message);
+            }
+        }
+        mMessageAdapter = new MessageAdapter(this, messages);
     }
 
     @Override
@@ -79,6 +96,18 @@ public class ChatActivity extends Activity implements View.OnClickListener {
                 message.content = text;
                 mMessageAdapter.addMessage(message, true);
                 mInputEditText.setText(null);
+
+                com.jegarn.minions.entity.Message dbMessage = new com.jegarn.minions.entity.Message(
+                        fromUserUid,
+                        fromUserAvatar,
+                        toUserUid,
+                        0,
+                        com.jegarn.minions.entity.Message.TYPE_CHAT,
+                        TextChat.SUB_TYPE,
+                        text,
+                        0
+                );
+                com.jegarn.minions.entity.Message.saveNewMessage(dbMessage);
             } else {
                 WidgetUtil.toast(this, "send message failed");
             }
@@ -92,16 +121,28 @@ public class ChatActivity extends Activity implements View.OnClickListener {
                 System.out.println("[ChatActivity] recv packet");
                 if (toUserUid.equals(packet.getFrom())) {
                     if (packet instanceof TextChat) {
-                        TextChat textPacket = (TextChat) packet;
+                        TextChat pkt = (TextChat) packet;
                         Message message = new Message();
                         message.from = packet.getFrom();
                         message.to = packet.getTo();
                         message.type = Message.TYPE_TEXT;
-                        message.content = textPacket.getContent().getText();
+                        message.content = pkt.getContent().getText();
                         android.os.Message msg = mHandler.obtainMessage();
                         msg.what = MSG_RECV_CHAT_PACKET;
                         msg.obj = message;
                         msg.sendToTarget();
+
+                        com.jegarn.minions.entity.Message dbMessage = new com.jegarn.minions.entity.Message(
+                                pkt.getFrom(),
+                                toUserAvatar,
+                                pkt.getTo(),
+                                0,
+                                com.jegarn.minions.entity.Message.TYPE_CHAT,
+                                pkt.getContent().getType(),
+                                pkt.getContent().getText(),
+                                0
+                        );
+                        com.jegarn.minions.entity.Message.saveNewMessage(dbMessage);
                     } else {
                         System.out.println("[ChatActivity] recv packet subType " + packet.getContent().getType() + " but need text");
                     }
@@ -142,7 +183,7 @@ public class ChatActivity extends Activity implements View.OnClickListener {
     public final class MessageAdapter extends BaseAdapter {
 
         private Context context;
-        private List<Message> messages;
+        private LinkedList<Message> messages;
         private LayoutInflater layoutInflater;
 
         public final class ItemView {
@@ -150,17 +191,25 @@ public class ChatActivity extends Activity implements View.OnClickListener {
             public TextView message;
         }
 
-        public MessageAdapter(Context context, List<Message> messages) {
+        public MessageAdapter(Context context, LinkedList<Message> messages) {
             this.context = context;
             this.messages = messages;
             layoutInflater = LayoutInflater.from(context);
         }
 
         public void addMessage(Message message, boolean refresh) {
+            addMessage(message, refresh, true);
+        }
+
+        public void addMessage(Message message, boolean refresh, boolean append) {
             if (messages == null) {
                 messages = new LinkedList<>();
             }
-            messages.add(message);
+            if (append) {
+                messages.add(message);
+            } else {
+                messages.addFirst(message);
+            }
             if (refresh) {
                 notifyDataSetChanged();
             }

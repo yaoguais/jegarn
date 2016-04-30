@@ -47,7 +47,6 @@ public class GroupchatFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Fresco.initialize(this.getActivity().getApplicationContext());
         super.onCreate(savedInstanceState);
     }
 
