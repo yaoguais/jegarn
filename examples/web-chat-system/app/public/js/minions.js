@@ -491,7 +491,7 @@
             html += '<li id="' + id + '" class="recommend-group"' + dataId + dataType + '>';
             html +='    <a href="#"><img src="'+group.icon+'" /></a>';
             //noinspection JSUnresolvedVariable
-            html +='    <p class="name">'+group.name+'<span class="people">'+group.member_count+'</span></p>';
+            html +='    <p class="name">'+group.name+'<span class="people">'+group.member_count+' members</span></p>';
             html +='    <p class="desc"><span class="marquee">'+group.description+'</span></p>';
             html +='</li>';
             return html;
