@@ -1,37 +1,37 @@
 Jegarn
 ======
 
-A high performance chat system, based on swoole, redis and msgpack.
-Integrated authorization, chat, groupchat, chatroom and offline storage.
+基于Swoole/Redis/Msgpack的高性能聊天框架,集成认证/单聊/群聊/聊天室/离线存储等功能.
 
-Website: [https://jegarn.com](https://jegarn.com)
+官网: [https://jegarn.com](https://jegarn.com)
 
-[简体中文版简介](README_zh-cn.md)
+[English Introduction](README.md)
 
 Demo
 ------
 
 ###### WebApp Demo: [https://jegarn.com/minions.html](https://jegarn.com/minions.html)
 
-This demo is referenced by webQQ, and supports
+该网页演示系统参照WebQQ,目前支持:
 
-1. register and mulit accounts login
-2. add friends and chat with freinds
-3. create chat group and chat with every member
-4. create chat room and chat with every online people
-5. a always online robot "Counter" for sending a number to everybody
+1. 注册/登录,多账号同时在线
+2. 添加好友,好友申请审核,好友之间单聊
+3. 创建群组,申请入群,入群申请审核,组成员群聊
+4. 创建聊天室,聊天室成员群聊
+5. 推荐会员列表,推荐群组列表,推荐聊天室列表
+6. 自动回复的机器人
 
 
 ###### Android Demo [https://jegarn.com/minions.apk](https://jegarn.com/minions.apk)
 
-android application supports:
+安卓应用支持:
 
-1. login the chat-system
-2. list your friends and chat with them
-3. list your groups and send messages
-4. list your chat rooms and send messages
-5. persist all the messages of chat
-6. notify then message come
+1. 登录聊天系统
+2. 好友列表,好友之间单聊
+3. 群组列表,组成员群聊
+4. 聊天室列表,聊天室成员群聊
+5. 持久化存储单聊/群聊/聊天室消息
+6. 消息通知,新消息手机振动
 
 
 Requirements
@@ -42,7 +42,7 @@ Requirements
 * Msgpack 0.5.7
 * Redis 2.8.22
 
-And for demo chat system "minions", it requires:
+对于聊天系统"minions", 要求安装:
 
 * yaf 2.3.5
 * mysql 5.6.26
@@ -66,7 +66,7 @@ Installation
 	pecl install msgpack
 	yum -y install redis
 
-for more details, see [INSTALL.md](./INSTALL.md).
+更加详细的安装过程,请参考 [INSTALL.md](./INSTALL.md).
 
 
 
@@ -77,19 +77,19 @@ Tutorial
 
 #### Start Server
 
-start a tcp server
+启动单个聊天服务器
 
 	$ php server.php 192.168.1.2 9501
 
-start another tcp server
+再启动一个聊天服务器
 
 	$ php server.php 192.168.1.2 9502
 
-start a websocket server
+启动一个WebSocket聊天服务器
 	
 	$ php webserver.php 192.168.1.2 9503
 
-all server use same cache can communicate with each other, and they form a cluster.
+所有的聊天服务器如果共用同一个Redis服务,那么它们就组成了一个集群,两两之间可以互相转发消息.
 
 
 #### Start Client
@@ -99,14 +99,14 @@ all server use same cache can communicate with each other, and they form a clust
 
 #### Configuration
 
-	// cache server to storage users and messages
+	// 用来保存消息的数据库配置
 	'cache'       => [
         'host'     => '192.168.1.2',
         'port'     => 6379,
         'timeout'  => 0.0,
         'password' => null
     ],
-	// server config, same as configuration of swoole
+	// 服务器配置,完全等同Swoole的配置项
     'server'      => [
         'host'          => '192.168.199.243',
         'port'          => 9501,
@@ -117,9 +117,9 @@ all server use same cache can communicate with each other, and they form a clust
         'ssl_cert_file' => __DIR__ . '/ssl.crt',
         'ssl_key_file' => __DIR__ . '/ssl.key'
     ],
-	// listeners, you can choose your own packet listeners
+	// 监听器列表,目前有身份验证/通知/单聊/群聊/聊天室消息.
     'listener' => [
-        'jegarn\listener\AuthPacketListener', // always add to first, not authorized user would do nothing
+        'jegarn\listener\AuthPacketListener', // 身份认证总是添加到第一个
         'jegarn\listener\NotificationPacketListener',
         'jegarn\listener\ChatPacketListener',
         'jegarn\listener\GroupChatPacketListener',
@@ -133,12 +133,11 @@ all server use same cache can communicate with each other, and they form a clust
 Contribution
 ------
 
-Thank you very much because of your contribution, and I believe we can make jegarn better.
-Some ways available:
+如果你想为Jegarn聊天框架作出一些贡献,可以参考一下几种方式:
 
-* contribute your code via Pull Request
-* write down your [Issues](https://github.com/Yaoguais/jegarn/issues)
-* make the Wiki complete
+* 贡献你的代码,提交Pull Request
+* 提交你在使用过程中发现的[Bug](https://github.com/Yaoguais/jegarn/issues)
+* 帮助我们完善Wiki
 
 
 
