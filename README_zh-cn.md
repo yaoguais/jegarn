@@ -133,7 +133,7 @@ Tutorial
 Contribution
 ------
 
-如果你想为Jegarn聊天框架作出一些贡献,可以参考一下几种方式:
+如果你想为Jegarn聊天框架作出一些贡献,请参考以下几种方式:
 
 * 贡献你的代码,提交Pull Request
 * 提交你在使用过程中发现的[Bug](https://github.com/Yaoguais/jegarn/issues)
