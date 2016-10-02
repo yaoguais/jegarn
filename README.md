@@ -4,34 +4,43 @@ Jegarn
 A high performance chat system, based on swoole, redis and msgpack.
 Integrated authorization, chat, groupchat, chatroom and offline storage.
 
+And client-sdk for iOS, Android, JS, and PHP are provided.
+
 Website: [https://jegarn.com](https://jegarn.com)
 
 [简体中文版简介](README_zh-cn.md)
 
-Demo
+
+
+
+Support SDKs and Demos
 ------
 
-###### WebApp Demo: [https://jegarn.com/minions.html](https://jegarn.com/minions.html)
+- [iOS SDK](https://github.com/Yaoguais/jegarn/blob/master/sdk/ios/src/README.md)
+- [Android SDK](https://github.com/Yaoguais/jegarn/blob/master/sdk/android/src/README.md)
+- [JS SDK](https://github.com/Yaoguais/jegarn/blob/master/sdk/js/src/README.md)
+- [PHP SDK](https://github.com/Yaoguais/jegarn/blob/master/sdk/php/src/README.md)
 
-This demo is referenced by webQQ, and supports
+We also build some applications for showing that how to use those SDKs.
 
-1. register and mulit accounts login
-2. add friends and chat with freinds
+[Visit the WebApp Demo](https://jegarn.com/minions.html),
+and download the [Source Code](https://github.com/Yaoguais/jegarn/blob/master/examples/web-chat-system).
+
+[Download Android APP](https://jegarn.com/minions.apk),
+and download the [Source Code](https://github.com/Yaoguais/android-on-the-way/tree/master/android-chat-system).
+
+[Download the iOS Project](https://github.com/Yaoguais/ios-on-the-way/tree/master/minions),
+and run it by Simulator or your iPhone.
+
+Demos Functions:
+
+1. register and multi accounts login
+2. add friends and chat with friends
 3. create chat group and chat with every member
 4. create chat room and chat with every online people
 5. a always online robot "Counter" for sending a number to everybody
 
 
-###### Android Demo [https://jegarn.com/minions.apk](https://jegarn.com/minions.apk)
-
-android application supports:
-
-1. login the chat-system
-2. list your friends and chat with them
-3. list your groups and send messages
-4. list your chat rooms and send messages
-5. persist all the messages of chat
-6. notify then message come
 
 
 Requirements
