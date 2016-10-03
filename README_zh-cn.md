@@ -46,8 +46,7 @@ Demo
 
 ###### 演示
 
-<a href="https://raw.githubusercontent.com/Yaoguais/jegarn/master/examples/web-chat-system/app/public/images/jegarn_demo.gif" target="__blank"><img src="https://raw.githubusercontent
-.com/Yaoguais/jegarn/master/examples/web-chat-system/app/public/images/jegarn_demo.gif" width="400"></a>
+<a href="https://jegarn.com/images/jegarn_demo.gif" target="_blank"><img src="https://jegarn.com/images/jegarn_demo.gif" width="400"></a>
 
 
 Requirements
