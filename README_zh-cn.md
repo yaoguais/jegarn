@@ -33,6 +33,22 @@ Demo
 5. 持久化存储单聊/群聊/聊天室消息
 6. 消息通知,新消息手机振动
 
+###### iOS Demo [iOS聊天项目下载](https://github.com/Yaoguais/ios-on-the-way/tree/master/minions)
+
+苹果应用支持:
+
+1. 登录聊天系统
+2. 好友列表,好友之间单聊
+3. 群组列表,组成员群聊
+4. 聊天室列表,聊天室成员群聊
+
+注: 下载项目即可在Xcode中运行
+
+###### 演示
+
+<a href="https://raw.githubusercontent.com/Yaoguais/jegarn/master/examples/web-chat-system/app/public/images/jegarn_demo.gif" target="__blank"><img src="https://raw.githubusercontent
+.com/Yaoguais/jegarn/master/examples/web-chat-system/app/public/images/jegarn_demo.gif" width="400"></a>
+
 
 Requirements
 ------
