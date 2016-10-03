@@ -46,7 +46,7 @@ Demo
 
 ###### 演示
 
-<a href="https://jegarn.com/images/jegarn_demo.gif" target="_blank"><img src="https://jegarn.com/images/jegarn_demo.gif" width="400"></a>
+<a href="https://jegarn.com/images/jegarn_demo.gif"><img src="https://jegarn.com/images/jegarn_demo_thumb.gif" width="400"></a>
 
 
 Requirements
