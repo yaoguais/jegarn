@@ -8,7 +8,13 @@ And client-sdk for iOS, Android, JS, and PHP are provided.
 
 Website: [https://jegarn.com](https://jegarn.com)
 
-[简体中文版简介](README_zh-cn.md)
+
+
+
+@Deprecated
+======
+
+This project has been moved to [https://github.com/jegarn](https://github.com/jegarn).
 
 
 
