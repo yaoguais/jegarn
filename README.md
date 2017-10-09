@@ -29,7 +29,7 @@ Support SDKs and Demos
 
 We also build some applications for showing that how to use those SDKs.
 
-<a href="https://jegarn.com/images/jegarn_demo.gif"><img src="https://jegarn.com/images/jegarn_demo_thumb.gif" width="200"></a>
+<a href="https://raw.githubusercontent.com/yaoguais/yaoguais.github.io/master/images/jegarn_preview.gif"><img src="https://raw.githubusercontent.com/yaoguais/yaoguais.github.io/master/images/jegarn_preview.gif" width="200"></a>
 
 [Visit the WebApp Demo](https://jegarn.com/minions.html),
 and download the [Source Code](https://github.com/Yaoguais/jegarn/blob/master/examples/web-chat-system).
